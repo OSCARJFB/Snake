@@ -1,5 +1,5 @@
 # Snake
-This a simple snake game.
+This is a simple snake game.
 Use asdw to maneuver the snakehead "D" avoid its tail "O". Try and collect the spawning scores "X". 
  
 KNOWN ISSUES:
