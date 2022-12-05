@@ -108,7 +108,12 @@ void runGame(struct snake* head, struct food food_spawn)
 			food_spawn = drawFood(food_spawn);
 			food_spawn = devourFood(head, food_spawn); 
 			
-			if(borderCollision(head))
+
+		   /********************************************
+		    *	Collision check is done here. 
+			*	If the result is true print game over.   
+			********************************************/
+			if(borderCollision(head) || bodyCollision(head))
 			{
 				gameOver(); 
 			}
@@ -198,8 +203,8 @@ void drawSnake(struct snake* head)
 }
 
 struct food addSnakeParts(struct snake** head, struct food food_spawn, 
-				  		 int x, 			  int y)
-{
+				  		  int x, 			   int y)
+{ 
 	struct snake* new_snake = malloc(sizeof(struct snake));
 	if(new_snake == NULL)
 	{
