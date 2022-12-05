@@ -10,9 +10,6 @@ enum screen_properties
 	SCREEN_HEIGHT = 720,
 };
 
-	const int leftBorder = 20, rightBorder = 440;
-	const int topBorder = 20, bottonBorder = 700;
-
 enum border_collision
 {
     LEFT_BORDER = 20,
