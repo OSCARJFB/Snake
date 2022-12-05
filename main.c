@@ -37,10 +37,13 @@ int snakeDirection(int);
 void moveSnake(struct snake* head, int);
 void drawSnake(struct snake*);
 struct food addSnakeParts(struct snake** head, struct food food_spawn, 
-						 int, 				  int);
+						  int, 				   int);
 struct food drawFood(struct food food_spawn); 
 struct food devourFood(struct snake* head, struct food food_spawn); 
 void drawBorders(void);
+bool borderCollision(struct snake* head); 
+bool bodyCollision(struct snake* head);
+void gameOver(); 
 
 int main(void)
 {
@@ -54,7 +57,7 @@ int main(void)
 
 void gameSetup(void)
 {
-	const char SCREEN_TITLE[] = "Snake Game"; 
+	const char* SCREEN_TITLE = "Snake Game"; 
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE); 
 	SetTargetFPS(60);
 
@@ -97,6 +100,7 @@ void runGame(struct snake* head, struct food food_spawn)
 		direction = snakeDirection(direction);
 
 		BeginDrawing();
+			
 			ClearBackground((Color){0, 0, 0, 0}); 
 			
 			drawBorders();
@@ -114,6 +118,11 @@ void runGame(struct snake* head, struct food food_spawn)
 
 			food_spawn = drawFood(food_spawn);
 			food_spawn = devourFood(head, food_spawn); 
+			
+			if(borderCollision(head))
+			{
+				gameOver(); 
+			}
 
 		EndDrawing();			
 	}
@@ -278,4 +287,51 @@ void drawBorders(void)
 	DrawRectangle(0, 0, SCREEN_WIDTH, 20, (Color){100, 100, 100, 255});
 	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color){100, 100, 100, 255});
 	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, (Color){100, 100, 100, 255});
+}
+
+bool borderCollision(struct snake* head)
+{
+	bool isColliding = false; 
+	const int leftBorder = 20, rightBorder = 440;
+	const int topBorder = 20, bottonBorder = 700;
+
+	if(head->x < leftBorder)
+	{
+		isColliding = true; 
+	}
+
+	if(head->x > rightBorder)
+	{
+		isColliding = true;
+	}
+
+	if(head->y < topBorder)
+	{
+		isColliding = true; 
+	}
+
+	if(head->y > bottonBorder)
+	{
+		isColliding = true;
+	}
+
+	return isColliding; 
+}
+
+bool bodyCollision(struct snake* head)
+{
+	struct snake* body = head; 
+	body = body->next; 
+	
+	while(body->next != NULL)
+	{
+		body = body->next;
+	}
+}
+
+void gameOver()
+{
+	bool gameStatus = true; 
+	const char* message = "Game Over!";
+	DrawText(message, 480 / 2, 720 / 2, 5, (Color){255, 255, 255 ,255});
 }
