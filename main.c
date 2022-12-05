@@ -2,18 +2,7 @@
 #include <stdlib.h>
 #include <raylib.h>
 #include <time.h>
-
-enum snake_properties
-{
-	HEIGHT = 20,
-	WIDTH = 20,
-};
-
-enum screen_properties
-{
-	SCREEN_WIDTH = 480,
-	SCREEN_HEIGHT = 720,
-};
+#include "enumerations.h"
 
 struct snake
 {
@@ -292,25 +281,23 @@ void drawBorders(void)
 bool borderCollision(struct snake* head)
 {
 	bool isColliding = false; 
-	const int leftBorder = 20, rightBorder = 440;
-	const int topBorder = 20, bottonBorder = 700;
 
-	if(head->x < leftBorder)
+	if(head->x < LEFT_BORDER)
 	{
 		isColliding = true; 
 	}
 
-	if(head->x > rightBorder)
+	if(head->x > RIGHT_BORDER)
 	{
 		isColliding = true;
 	}
 
-	if(head->y < topBorder)
+	if(head->y < TOP_BORDER)
 	{
 		isColliding = true; 
 	}
 
-	if(head->y > bottonBorder)
+	if(head->y > BOTTOM_BORDER)
 	{
 		isColliding = true;
 	}
