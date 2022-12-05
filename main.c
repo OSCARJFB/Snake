@@ -68,6 +68,7 @@ struct snake* snakeSetup(void)
 	{
 		failedAlloc(); 
 	}
+	
 	head->next = NULL;
 	head->y = SCREEN_WIDTH / 2;
 	head->x = SCREEN_HEIGHT / 2; 
