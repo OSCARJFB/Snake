@@ -25,8 +25,7 @@ void runGame(struct snake*, struct food);
 int snakeDirection(int); 
 void moveSnake(struct snake* head, int);
 void drawSnake(struct snake*);
-struct food addSnakeParts(struct snake** head, struct food food_spawn, 
-						  int, 				   int);
+struct food addSnakeParts(struct snake** head, struct food food_spawn);
 struct food drawFood(struct food food_spawn); 
 struct food devourFood(struct snake* head, struct food food_spawn); 
 void drawBorders(void);
@@ -113,10 +112,11 @@ void runGame(struct snake* head, struct food food_spawn)
 		    *	Collision check is done here. 
 			*	If the result is true print game over.   
 			********************************************/
+
 			if(borderCollision(head) || bodyCollision(head))
 			{
 				gameOver(); 
-			}
+			}	
 
 		EndDrawing();			
 	}
@@ -152,7 +152,6 @@ int snakeDirection(int direction)
 
 void moveSnake(struct snake* head, int direction)
 {
-	//test
 	const int speed = 20;
 	
 	struct snake* body = head;
@@ -203,25 +202,24 @@ void drawSnake(struct snake* head)
 	}
 }
 
-struct food addSnakeParts(struct snake** head, struct food food_spawn, 
-				  		  int x, 			   int y)
+struct food addSnakeParts(struct snake** head, struct food food_spawn)
 { 
-	struct snake* new_snake = malloc(sizeof(struct snake));
-	if(new_snake == NULL)
+	struct snake* new_node = malloc(sizeof(struct snake));
+	if(new_node == NULL)
 	{
 		failedAlloc();
 	}
 	
-	new_snake->next = NULL;
-	new_snake->x = x, new_snake->y = y;
+	new_node->next = NULL;
+	new_node->x = -20, new_node->y = -20;
 
-	struct snake* current_snake = *head;
-	while(current_snake->next != NULL)
+	struct snake* current_node = *head;
+	while(current_node->next != NULL)
 	{
-		current_snake = current_snake->next;
+		current_node = current_node->next;
 	}	
 	
-	current_snake->next = new_snake;
+	current_node->next = new_node;
 
 	food_spawn.spawned = false; 
 	++food_spawn.score;
@@ -252,25 +250,25 @@ struct food devourFood(struct snake* head, struct food food_spawn)
 	if((head->x < food_spawn.x + radius && head->x > food_spawn.x - radius) &&
 	   (head->y < food_spawn.y + radius && head->y > food_spawn.y - radius))	
 	{
-		return food_spawn = addSnakeParts(&head, food_spawn, head->x, head->y);
+		return food_spawn = addSnakeParts(&head, food_spawn);
 	}
 
 	if((head->x > food_spawn.x - radius && head->x < food_spawn.x + radius) &&
 	   (head->y < food_spawn.y + radius && head->y > food_spawn.y - radius))	
 	{
-		return food_spawn = addSnakeParts(&head, food_spawn, head->x, head->y); 
+		return food_spawn = addSnakeParts(&head, food_spawn); 
 	}
 
 	if((head->y < food_spawn.y + radius && head->y > food_spawn.y - radius) && 
 	   (head->x < food_spawn.x + radius && head->x > food_spawn.x - radius))	
 	{
-		return food_spawn = addSnakeParts(&head, food_spawn, head->x, head->y);
+		return food_spawn = addSnakeParts(&head, food_spawn);
 	}
 
 	if((head->y > food_spawn.y - radius && head->y < food_spawn.y + radius) &&
 	   (head->x < food_spawn.x + radius && head->x > food_spawn.x - radius))	
 	{
-		return food_spawn = addSnakeParts(&head, food_spawn, head->x, head->y); 
+		return food_spawn = addSnakeParts(&head, food_spawn); 
 	}
 
 	return food_spawn; 
@@ -313,18 +311,27 @@ bool borderCollision(struct snake* head)
 
 bool bodyCollision(struct snake* head)
 {
+	bool isColliding = false; 
+
 	struct snake* body = head; 
 	body = body->next; 
 	
-	while(body->next != NULL)
+	while(body != NULL)
 	{
+		if(head->x == body->x && head->y == body->y)
+		{
+			isColliding = true; 
+			break; 
+		}
 		body = body->next;
 	}
+
+	return isColliding;
 }
 
 void gameOver()
 {
-	bool gameStatus = true; 
 	const char* message = "Game Over!";
-	DrawText(message, 480 / 2, 720 / 2, 5, (Color){255, 255, 255 ,255});
+	DrawText(message, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
+			20, (Color){255, 255, 255 ,255});
 }
