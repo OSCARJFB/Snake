@@ -85,40 +85,39 @@ void runGame(struct snake* head, struct food food_spawn)
 	
 	while(!WindowShouldClose())
 	{
-		direction = snakeDirection(direction);
+		if(borderCollision(head) || bodyCollision(head))
+		{	
+			BeginDrawing();
+				ClearBackground((Color){0, 0, 0, 0}); 
+				gameOver();
+			EndDrawing();
+		}	
+		else 
+		{
+			direction = snakeDirection(direction);
 
-		BeginDrawing();
-			
-			ClearBackground((Color){0, 0, 0, 0}); 
-			
-			drawBorders();
-			drawSnake(head);
+			BeginDrawing();
+				
+				ClearBackground((Color){0, 0, 0, 0}); 
+				
+				drawBorders();
+				drawSnake(head);
 
-			if(timer >= timer_limit)
-			{
-				moveSnake(head, direction);
-				timer = 0.0f;
-			}
-			else
-			{
-				timer += GetFrameTime();
-			}
+				if(timer >= timer_limit)
+				{
+					moveSnake(head, direction);
+					timer = 0.0f;
+				}
+				else
+				{
+					timer += GetFrameTime();
+				}
 
-			food_spawn = drawFood(food_spawn);
-			food_spawn = devourFood(head, food_spawn); 
-			
+				food_spawn = drawFood(food_spawn);
+				food_spawn = devourFood(head, food_spawn); 
 
-		   /********************************************
-		    *	Collision check is done here. 
-			*	If the result is true print game over.   
-			********************************************/
-
-			if(borderCollision(head) || bodyCollision(head))
-			{
-				gameOver(); 
-			}	
-
-		EndDrawing();			
+			EndDrawing();
+		}			
 	}
 
 	free(head);
