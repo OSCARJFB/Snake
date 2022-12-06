@@ -152,6 +152,7 @@ int snakeDirection(int direction)
 
 void moveSnake(struct snake* head, int direction)
 {
+	//test
 	const int speed = 20;
 	
 	struct snake* body = head;
