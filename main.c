@@ -71,11 +71,11 @@ struct snake* snakeSetup(void)
 struct food foodSetup(void)
 {
 	struct food food_spawn;
-	food_spawn.x = rand() % (SCREEN_WIDTH - 10) + 10;
-	food_spawn.y = rand() % (SCREEN_HEIGHT - 10) + 10;
+	food_spawn.x = WIDTH * (rand() % (SCREEN_WIDTH - 40) / 20 + 2);
+	food_spawn.y = HEIGHT * (rand() % (SCREEN_HEIGHT - 40) / 20 + 2);
 	food_spawn.score = 0;
 	food_spawn.spawned = true; 
-
+	
 	return food_spawn;
 }
 
@@ -90,7 +90,7 @@ void runGame(struct snake* head, struct food food_spawn)
 	while(!WindowShouldClose())
 	{
 		BeginDrawing();
-			
+
 			if(borderCollision(head) || bodyCollision(head))
 			{	
 					game_over = gameOver(); 
@@ -232,46 +232,23 @@ struct food addSnakeParts(struct snake** head, struct food food_spawn)
 
 struct food drawFood(struct food food_spawn)
 {
-	const float radius = 10.0f;
-
 	if(!food_spawn.spawned)
 	{
-		food_spawn.x = rand() % (SCREEN_WIDTH - 10) + 10;
-		food_spawn.y = rand() % (SCREEN_HEIGHT - 10) + 10;
+		food_spawn.x = WIDTH * (rand() % (SCREEN_WIDTH - 40) / 20 + 2);
+		food_spawn.y = HEIGHT * (rand() % (SCREEN_HEIGHT - 40) / 20 + 2);
 		food_spawn.spawned = true; 
 	}
 
-	DrawCircle(food_spawn.x, food_spawn.y, radius, (Color){255, 0, 0, 255}); 
+	DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){255, 0, 0, 255}); 
 
 	return food_spawn; 
 }
 
 struct food devourFood(struct snake* head, struct food food_spawn)
 {
-	const int radius = 15;
-
-	if((head->x < food_spawn.x + radius && head->x > food_spawn.x - radius) &&
-	   (head->y < food_spawn.y + radius && head->y > food_spawn.y - radius))	
+	if(head->x == food_spawn.x && head->y == food_spawn.y)
 	{
-		return food_spawn = addSnakeParts(&head, food_spawn);
-	}
-
-	if((head->x > food_spawn.x - radius && head->x < food_spawn.x + radius) &&
-	   (head->y < food_spawn.y + radius && head->y > food_spawn.y - radius))	
-	{
-		return food_spawn = addSnakeParts(&head, food_spawn); 
-	}
-
-	if((head->y < food_spawn.y + radius && head->y > food_spawn.y - radius) && 
-	   (head->x < food_spawn.x + radius && head->x > food_spawn.x - radius))	
-	{
-		return food_spawn = addSnakeParts(&head, food_spawn);
-	}
-
-	if((head->y > food_spawn.y - radius && head->y < food_spawn.y + radius) &&
-	   (head->x < food_spawn.x + radius && head->x > food_spawn.x - radius))	
-	{
-		return food_spawn = addSnakeParts(&head, food_spawn); 
+		return addSnakeParts(&head, food_spawn);
 	}
 
 	return food_spawn; 
