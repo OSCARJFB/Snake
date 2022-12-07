@@ -33,6 +33,7 @@ bool borderCollision(struct snake* head);
 bool bodyCollision(struct snake* head);
 bool gameOver(); 
 bool pauseGame(bool pause); 
+void drawGrid(void);
 
 int main(void)
 {
@@ -71,8 +72,8 @@ struct snake* snakeSetup(void)
 struct food foodSetup(void)
 {
 	struct food food_spawn;
-	food_spawn.x = WIDTH * (rand() % (SCREEN_WIDTH - 40) / 20 + 2);
-	food_spawn.y = HEIGHT * (rand() % (SCREEN_HEIGHT - 40) / 20 + 2);
+	food_spawn.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
+	food_spawn.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
 	food_spawn.score = 0;
 	food_spawn.spawned = true; 
 	
@@ -82,15 +83,12 @@ struct food foodSetup(void)
 void runGame(struct snake* head, struct food food_spawn)
 {
 	float timer = 0.0f, timer_limit = 0.2f;
-	
 	int direction = 0; 
-
 	bool pause = false, game_over = false; 
 
 	while(!WindowShouldClose())
 	{
 		BeginDrawing();
-
 			if(borderCollision(head) || bodyCollision(head))
 			{	
 					game_over = gameOver(); 
@@ -99,11 +97,12 @@ void runGame(struct snake* head, struct food food_spawn)
 			pause = pauseGame(pause);
 			direction = snakeDirection(direction, pause);
 
-			ClearBackground((Color){0, 0, 0, 0}); 
-			
-			drawBorders();
-			drawSnake(head);
+			ClearBackground((Color){0, 0, 0, 0});
 
+			drawGrid();
+			drawBorders();
+
+			drawSnake(head);
 			if(timer >= timer_limit && !pause && !game_over)
 			{
 				moveSnake(head, direction);
@@ -205,6 +204,42 @@ void drawSnake(struct snake* head)
 	}
 }
 
+struct food drawFood(struct food food_spawn)
+{
+	if(!food_spawn.spawned)
+	{
+		food_spawn.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
+		food_spawn.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
+		food_spawn.spawned = true; 
+	}
+
+	DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){255, 0, 0, 255}); 
+
+	return food_spawn; 
+}
+
+void drawBorders(void) 
+{
+	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, 
+				 (Color){100, 100, 100, 255});
+	DrawRectangle(0, 0, SCREEN_WIDTH, 20, 
+				 (Color){100, 100, 100, 255});
+	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 
+				 (Color){100, 100, 100, 255});
+	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, 
+			     (Color){100, 100, 100, 255});
+}
+
+struct food devourFood(struct snake* head, struct food food_spawn)
+{
+	if(head->x == food_spawn.x && head->y == food_spawn.y)
+	{
+		return addSnakeParts(&head, food_spawn);
+	}
+
+	return food_spawn; 
+}
+
 struct food addSnakeParts(struct snake** head, struct food food_spawn)
 { 
 	struct snake* new_node = malloc(sizeof(struct snake));
@@ -228,38 +263,6 @@ struct food addSnakeParts(struct snake** head, struct food food_spawn)
 	++food_spawn.score;
 
 	return food_spawn;
-}
-
-struct food drawFood(struct food food_spawn)
-{
-	if(!food_spawn.spawned)
-	{
-		food_spawn.x = WIDTH * (rand() % (SCREEN_WIDTH - 40) / 20 + 2);
-		food_spawn.y = HEIGHT * (rand() % (SCREEN_HEIGHT - 40) / 20 + 2);
-		food_spawn.spawned = true; 
-	}
-
-	DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){255, 0, 0, 255}); 
-
-	return food_spawn; 
-}
-
-struct food devourFood(struct snake* head, struct food food_spawn)
-{
-	if(head->x == food_spawn.x && head->y == food_spawn.y)
-	{
-		return addSnakeParts(&head, food_spawn);
-	}
-
-	return food_spawn; 
-}
-
-void drawBorders(void) 
-{
-	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, (Color){100, 100, 100, 255});
-	DrawRectangle(0, 0, SCREEN_WIDTH, 20, (Color){100, 100, 100, 255});
-	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color){100, 100, 100, 255});
-	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, (Color){100, 100, 100, 255});
 }
 
 bool borderCollision(struct snake* head)
@@ -330,4 +333,16 @@ bool pauseGame(bool pause)
 	}
 	
 	return pause;
+}
+
+void drawGrid(void)
+{
+	for(int y = 0; y <= SCREEN_HEIGHT; y += HEIGHT)
+	{
+		for(int x = 0; x <= SCREEN_WIDTH; x += WIDTH)
+		{
+			DrawRectangleLines(x, 	  y, 
+							   WIDTH, HEIGHT, (Color){100, 100, 100, 150});
+		}
+	}
 }
