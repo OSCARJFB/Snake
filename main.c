@@ -19,21 +19,25 @@ struct food
 
 void failedAlloc(void) {exit(1);}
 void gameSetup(void);
-struct snake* snakeSetup(void);
-struct food foodSetup(void);
 void runGame(struct snake*, struct food);
-int snakeDirection(int, bool); 
 void moveSnake(struct snake* head, int);
 void drawSnake(struct snake*);
+void drawBorders(void);
+void drawGrid(void);
+void drawGrid(void);
+
+int snakeDirection(int, bool); 
+
+struct snake* snakeSetup(void);
+struct food foodSetup(void);
 struct food addSnakeParts(struct snake** head, struct food food_spawn);
 struct food drawFood(struct food food_spawn); 
 struct food devourFood(struct snake* head, struct food food_spawn); 
-void drawBorders(void);
+
 bool borderCollision(struct snake* head); 
 bool bodyCollision(struct snake* head);
-bool gameOver(); 
+bool gameOver(void); 
 bool pauseGame(bool pause); 
-void drawGrid(void);
 
 int main(void)
 {
@@ -312,7 +316,7 @@ bool bodyCollision(struct snake* head)
 	return isColliding;
 }
 
-bool gameOver()
+bool gameOver(void)
 {
 	const char* message = "Game Over!";
 	DrawText(message, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
