@@ -25,6 +25,7 @@ void drawSnake(struct snake*);
 void drawBorders(void);
 void drawGrid(void);
 void drawGrid(void);
+void drawScore(struct food);
 
 int snakeDirection(int, bool); 
 
@@ -93,22 +94,24 @@ void runGame(struct snake* head, struct food food_spawn)
 	while(!WindowShouldClose())
 	{
 		BeginDrawing();
+			
 			if(borderCollision(head) || bodyCollision(head))
 			{	
 					game_over = gameOver(); 
 			}
 
 			pause = pauseGame(pause);
-			direction = snakeDirection(direction, pause);
 
 			ClearBackground((Color){0, 0, 0, 0});
 
 			drawGrid();
 			drawBorders();
+			drawScore(food_spawn);
 
 			drawSnake(head);
 			if(timer >= timer_limit && !pause && !game_over)
 			{
+				direction = snakeDirection(direction, pause);
 				moveSnake(head, direction);
 				timer = 0.0f;
 			}
@@ -132,7 +135,7 @@ int snakeDirection(int direction, bool pause)
 	if(!pause)
 	{
 		if(IsKeyDown(KEY_W) && direction != KEY_S && 
-		!IsKeyDown(KEY_A) && !IsKeyDown(KEY_S) && !IsKeyDown(KEY_S))
+		   !IsKeyDown(KEY_A) && !IsKeyDown(KEY_S) && !IsKeyDown(KEY_S))
 		{
 			direction = KEY_W;
 		}
@@ -318,9 +321,9 @@ bool bodyCollision(struct snake* head)
 
 bool gameOver(void)
 {
-	const char* message = "Game Over!";
-	DrawText(message, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
-			 20, (Color){255, 255, 255 ,255});
+	const char* MESSAGE = "Game Over!";
+	DrawText(MESSAGE, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
+			 FONT_SIZE, (Color){255, 255, 0, 255});
 	
 	return true; 
 }
@@ -349,4 +352,10 @@ void drawGrid(void)
 							   WIDTH, HEIGHT, (Color){100, 100, 100, 150});
 		}
 	}
+}
+
+void drawScore(struct food food_spawn)
+{
+	const char* MESSAGE = "Score: %d";
+	DrawText(TextFormat(MESSAGE, food_spawn.score),1 ,1 , FONT_SIZE, (Color){255, 255, 0, 255});
 }
