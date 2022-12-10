@@ -1,2 +1,2 @@
-main: main.c 
-	cc main.c -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+main: snake_engine.c 
+	cc snake_engine.c -lraylib -lGL -lm -lpthread -ldl -lrt -lX11

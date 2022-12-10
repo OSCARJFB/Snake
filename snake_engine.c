@@ -2,43 +2,9 @@
 #include <stdlib.h>
 #include <raylib.h>
 #include <time.h>
-#include "enumerations.h"
-
-struct snake
-{
-	int x, y;
-	struct snake* next;
-};
-
-struct food
-{
-	int x, y; 
-	int score;
-	bool spawned; 
-};
-
-void failedAlloc(void) {exit(1);}
-void gameSetup(void);
-void runGame(struct snake*, struct food);
-void moveSnake(struct snake* head, int);
-void drawSnake(struct snake*);
-void drawBorders(void);
-void drawGrid(void);
-void drawGrid(void);
-void drawScore(struct food);
-
-int snakeDirection(int, bool); 
-
-struct snake* snakeSetup(void);
-struct food foodSetup(void);
-struct food addSnakeParts(struct snake** head, struct food food_spawn);
-struct food drawFood(struct food food_spawn); 
-struct food devourFood(struct snake* head, struct food food_spawn); 
-
-bool borderCollision(struct snake* head); 
-bool bodyCollision(struct snake* head);
-bool gameOver(void); 
-bool pauseGame(bool pause); 
+#include "snake_structures.h"
+#include "snake_prototypes.h"
+#include "snake_enumerations.h"
 
 int main(void)
 {
@@ -64,7 +30,7 @@ struct snake* snakeSetup(void)
 	struct snake* head = malloc(sizeof(struct snake));
 	if(head == NULL)
 	{
-		failedAlloc(); 
+		exit(1); 
 	}
 	
 	head->next = NULL;
@@ -109,6 +75,9 @@ void runGame(struct snake* head, struct food food_spawn)
 			drawScore(food_spawn);
 
 			drawSnake(head);
+			food_spawn = drawFood(food_spawn);
+			food_spawn = devourFood(head, food_spawn); 
+
 			if(timer >= timer_limit && !pause && !game_over)
 			{
 				direction = snakeDirection(direction, pause);
@@ -119,9 +88,6 @@ void runGame(struct snake* head, struct food food_spawn)
 			{
 				timer += GetFrameTime();
 			}
-
-			food_spawn = drawFood(food_spawn);
-			food_spawn = devourFood(head, food_spawn); 
 
 		EndDrawing();
 
@@ -198,6 +164,11 @@ void moveSnake(struct snake* head, int direction)
 
 }
 
+void moveFood()
+{
+	/* To be done. */
+}
+
 void drawSnake(struct snake* head)
 {
 	struct snake* body = head;
@@ -225,18 +196,6 @@ struct food drawFood(struct food food_spawn)
 	return food_spawn; 
 }
 
-void drawBorders(void) 
-{
-	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, 
-				 (Color){100, 100, 100, 255});
-	DrawRectangle(0, 0, SCREEN_WIDTH, 20, 
-				 (Color){100, 100, 100, 255});
-	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 
-				 (Color){100, 100, 100, 255});
-	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, 
-			     (Color){100, 100, 100, 255});
-}
-
 struct food devourFood(struct snake* head, struct food food_spawn)
 {
 	if(head->x == food_spawn.x && head->y == food_spawn.y)
@@ -252,7 +211,7 @@ struct food addSnakeParts(struct snake** head, struct food food_spawn)
 	struct snake* new_node = malloc(sizeof(struct snake));
 	if(new_node == NULL)
 	{
-		failedAlloc();
+		exit(1);
 	}
 	
 	new_node->next = NULL;
@@ -270,6 +229,36 @@ struct food addSnakeParts(struct snake** head, struct food food_spawn)
 	++food_spawn.score;
 
 	return food_spawn;
+}
+
+void drawGrid(void)
+{
+	for(int y = 0; y <= SCREEN_HEIGHT; y += HEIGHT)
+	{
+		for(int x = 0; x <= SCREEN_WIDTH; x += WIDTH)
+		{
+			DrawRectangleLines(x, 	  y, 
+							   WIDTH, HEIGHT, (Color){100, 100, 100, 150});
+		}
+	}
+}
+
+void drawBorders(void) 
+{
+	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, 
+				 (Color){100, 100, 100, 255});
+	DrawRectangle(0, 0, SCREEN_WIDTH, 20, 
+				 (Color){100, 100, 100, 255});
+	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 
+				 (Color){100, 100, 100, 255});
+	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, 
+			     (Color){100, 100, 100, 255});
+}
+
+void drawScore(struct food food_spawn)
+{
+	const char* MESSAGE = "Score: %d";
+	DrawText(TextFormat(MESSAGE, food_spawn.score),1 ,1 , FONT_SIZE, (Color){255, 255, 0, 255});
 }
 
 bool borderCollision(struct snake* head)
@@ -340,22 +329,4 @@ bool pauseGame(bool pause)
 	}
 	
 	return pause;
-}
-
-void drawGrid(void)
-{
-	for(int y = 0; y <= SCREEN_HEIGHT; y += HEIGHT)
-	{
-		for(int x = 0; x <= SCREEN_WIDTH; x += WIDTH)
-		{
-			DrawRectangleLines(x, 	  y, 
-							   WIDTH, HEIGHT, (Color){100, 100, 100, 150});
-		}
-	}
-}
-
-void drawScore(struct food food_spawn)
-{
-	const char* MESSAGE = "Score: %d";
-	DrawText(TextFormat(MESSAGE, food_spawn.score),1 ,1 , FONT_SIZE, (Color){255, 255, 0, 255});
 }
