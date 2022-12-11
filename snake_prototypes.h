@@ -25,7 +25,7 @@ void runGame(struct snake*, struct food);
 void moveSnake(struct snake* head, int);
 
 /// @brief in progress. 
-void moveFood();
+struct food moveFood(struct food food_spawn);
 
 /// @brief Iterates a linked list and draw each node unto the screen, this will write the snake. 
 /// @param struct*
@@ -33,7 +33,7 @@ void drawSnake(struct snake*);
 
 /// @brief Draw food that may be devoured by the snake. 
 /// @param struct
-/// @return An struct built of the parameter either modified or unmodified.
+/// @return A struct built of the parameter either modified or unmodified.
 struct food drawFood(struct food food_spawn); 
 
 /// @brief Draw a border covering the edges of the screen view. 
@@ -51,7 +51,7 @@ void drawScore(struct food);
 /// @brief Get user input from the keyboard which can used to steer the movement direction of the snake. 
 /// @param int
 /// @param bool
-/// @return Returns a integer representing the keystroke in ASCII value. 
+/// @return A integer representing the keystroke in ASCII value. 
 int snakeDirection(int, bool); 
 
 /// @brief Check if the snake has devoured the food.

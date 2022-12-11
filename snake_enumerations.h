@@ -21,4 +21,13 @@ enum game_props
 
     /// @brief The size of all text in this game.
     FONT_SIZE = 20, 
+
+    /// @brief Movement direction of food and enemy. 
+    LEFT_UP = 1,
+    /// @brief Movement direction of food and enemy. 
+    RIGHT_UP = 2, 
+    /// @brief Movement direction of food and enemy. 
+    LEFT_DOWN = 3,
+    /// @brief Movement direction of food and enemy. 
+    RIGHT_DOWN = 4, 
 };

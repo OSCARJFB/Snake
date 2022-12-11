@@ -11,7 +11,7 @@ struct snake
 /// @brief and also if food is spawned or not.  
 struct food
 {
-	int x, y; 
+	int x, y, direction; 
 	int score;
 	bool spawned; 
 };
