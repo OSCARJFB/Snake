@@ -113,23 +113,19 @@ int snakeDirection(int direction, bool pause)
 {
 	if(!pause)
 	{
-		if(IsKeyDown(KEY_W) && direction != KEY_S && 
-		   !IsKeyDown(KEY_A) && !IsKeyDown(KEY_S) && !IsKeyDown(KEY_S))
+		if(IsKeyDown(KEY_W) && direction != KEY_S)
 		{
 			direction = KEY_W;
 		}
-		else if(IsKeyDown(KEY_A) && direction != KEY_D &&
-				!IsKeyDown(KEY_W) && !IsKeyDown(KEY_S) && !IsKeyDown(KEY_S))
+		else if(IsKeyDown(KEY_A) && direction != KEY_D)
 		{
 			direction = KEY_A;
 		}
-		else if(IsKeyDown(KEY_S) && direction != KEY_W && 
-				!IsKeyDown(KEY_W) && !IsKeyDown(KEY_A) && !IsKeyDown(KEY_D))
+		else if(IsKeyDown(KEY_S) && direction != KEY_W)
 		{
 			direction = KEY_S;
 		}
-		else if(IsKeyDown(KEY_D) && direction != KEY_A && 
-				!IsKeyDown(KEY_W) && !IsKeyDown(KEY_A) && !IsKeyDown(KEY_S))
+		else if(IsKeyDown(KEY_D) && direction != KEY_A)
 		{
 			direction  = KEY_D;
 		}
@@ -182,19 +178,19 @@ struct food moveFood(struct food food_spawn)
 	const int speed = 20;
 	int select_direction = food_spawn.direction;
 
-	if(food_spawn.x == RIGHT_BORDER)
+	if(food_spawn.x >= RIGHT_BORDER)
 	{
 		select_direction = select_direction == RIGHT_UP ? LEFT_UP : LEFT_DOWN;
 	}
-	else if(food_spawn.x == LEFT_BORDER)
+	else if(food_spawn.x <= LEFT_BORDER)
 	{
 		select_direction = select_direction == LEFT_UP ? RIGHT_UP : RIGHT_DOWN;
 	}
-	else if(food_spawn.y == TOP_BORDER)
+	else if(food_spawn.y <= TOP_BORDER)
 	{
 		select_direction = select_direction == LEFT_UP ? LEFT_DOWN : RIGHT_DOWN;
 	} 
-	else if(food_spawn.y == BOTTOM_BORDER)
+	else if(food_spawn.y >= BOTTOM_BORDER)
 	{
 		select_direction = select_direction == LEFT_DOWN ? LEFT_UP : RIGHT_UP;
 	} 
