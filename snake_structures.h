@@ -13,5 +13,5 @@ struct food
 {
 	int x, y, direction; 
 	int score;
-	bool spawned; 
+	bool spawned, status; 
 };

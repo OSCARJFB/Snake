@@ -8,16 +8,22 @@ void gameSetup(void);
 /// @return the allocated head of a linked list.
 struct snake* snakeSetup(void);
 
-/// @brief Initiate start location of the food. 
+/// @brief Initiate start location of good food. 
 /// @param void
 /// @return A structure. 
-struct food foodSetup(void);
+struct food goodFoodSetup(void);
+
+/// @brief Initiate start location of bad food. 
+/// @param void
+/// @return A structure. 
+struct food badFoodSetup(void);
 
 /// @brief Excute the game loop and run until end of the game. 
 /// @brief This functions calls most of the other logic in this game. 
 /// @param struct*
 /// @param struct 
-void runGame(struct snake*, struct food);
+/// @param struct
+void runGame(struct snake*, struct food, struct food);
 
 /// @brief Move the snake according to the direction provided by the integer parameter.
 /// @param struct*
@@ -58,7 +64,7 @@ int snakeDirection(int, bool);
 /// @param struct*
 /// @param struct
 /// @return A struct used for food logic. 
-struct food devourFood(struct snake* head, struct food food_spawn); 
+struct food devourFood(struct snake* head, struct food food_spawn, bool*); 
 
 /// @brief Add a new node to the linked list, this will be done to grow the snake. 
 /// @param struct**

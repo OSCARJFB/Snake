@@ -9,9 +9,12 @@
 int main(void)
 {
 	gameSetup();
+
 	struct snake* head = snakeSetup();
-	struct food food_spawn = foodSetup();
-	runGame(head, food_spawn);
+	struct food good_food = goodFoodSetup();
+	struct food bad_food = badFoodSetup(); 
+
+	runGame(head, good_food, bad_food);
 
 	return 0;
 }
@@ -40,33 +43,45 @@ struct snake* snakeSetup(void)
 	return head;
 }
 
-struct food foodSetup(void)
+struct food goodFoodSetup(void)
 {
-	struct food food_spawn;
-	food_spawn.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
-	food_spawn.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
-	food_spawn.direction = rand() % 4 + 1;
-	food_spawn.score = 0;
-	food_spawn.spawned = true; 
+	struct food good_food;
+	good_food.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
+	good_food.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
+	good_food.direction = rand() % 4 + 1, good_food.score = 0;
+	good_food.status = true, good_food.spawned = true; 
 	
-	return food_spawn;
+	return good_food;
 }
 
-void runGame(struct snake* head, struct food food_spawn)
+struct food badFoodSetup(void)
+{
+	struct food bad_food;
+	bad_food.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
+	bad_food.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
+	bad_food.direction = rand() % 4 + 1, bad_food.score = 0;
+	bad_food.status = false, bad_food.spawned = true; 
+
+	return bad_food;
+}
+
+void runGame(struct snake* head, struct food good_food, struct food bad_food)
 {
 	float snake_timer = 0.0f, snake_timer_limit = 0.2f;
 	float food_timer = 0.0f, food_timer_limit = 0.5f;
+	
+	bool pause, game_over, bad_food_dev; 
+	pause = game_over = bad_food_dev = false;
 
 	int direction = 0; 
-	bool pause = false, game_over = false; 
 
 	while(!WindowShouldClose())
 	{
 		BeginDrawing();
 			
-			if(borderCollision(head) || bodyCollision(head))
+			if(borderCollision(head) || bodyCollision(head) || bad_food_dev)
 			{	
-					game_over = gameOver(); 
+				game_over = gameOver(); 
 			}
 
 			pause = pauseGame(pause);
@@ -75,11 +90,13 @@ void runGame(struct snake* head, struct food food_spawn)
 
 			drawGrid();
 			drawBorders();
-			drawScore(food_spawn);
-
+			drawScore(good_food);
 			drawSnake(head);
-			food_spawn = drawFood(food_spawn);
-			food_spawn = devourFood(head, food_spawn); 
+			good_food = drawFood(good_food);
+			bad_food = drawFood(bad_food);
+			
+			good_food = devourFood(head, good_food, &bad_food_dev); 
+			bad_food = devourFood(head, bad_food, &bad_food_dev); 
 
 			if(snake_timer >= snake_timer_limit && !pause && !game_over)
 			{
@@ -94,7 +111,7 @@ void runGame(struct snake* head, struct food food_spawn)
 
 			if(food_timer >= food_timer_limit && !pause && !game_over)
 			{
-				food_spawn = moveFood(food_spawn);
+				good_food = moveFood(good_food);
 				food_timer = 0.0f;
 			}
 			else
@@ -173,51 +190,51 @@ void moveSnake(struct snake* head, int direction)
 
 }
 
-struct food moveFood(struct food food_spawn)
+struct food moveFood(struct food good_food)
 {
 	const int speed = 20;
-	int select_direction = food_spawn.direction;
+	int select_direction = good_food.direction;
 
-	if(food_spawn.x >= RIGHT_BORDER)
+	if(good_food.x >= RIGHT_BORDER)
 	{
 		select_direction = select_direction == RIGHT_UP ? LEFT_UP : LEFT_DOWN;
 	}
-	else if(food_spawn.x <= LEFT_BORDER)
+	else if(good_food.x <= LEFT_BORDER)
 	{
 		select_direction = select_direction == LEFT_UP ? RIGHT_UP : RIGHT_DOWN;
 	}
-	else if(food_spawn.y <= TOP_BORDER)
+	else if(good_food.y <= TOP_BORDER)
 	{
 		select_direction = select_direction == LEFT_UP ? LEFT_DOWN : RIGHT_DOWN;
 	} 
-	else if(food_spawn.y >= BOTTOM_BORDER)
+	else if(good_food.y >= BOTTOM_BORDER)
 	{
 		select_direction = select_direction == LEFT_DOWN ? LEFT_UP : RIGHT_UP;
 	} 
 
-	food_spawn.direction = select_direction;
+	good_food.direction = select_direction;
 
-	switch(food_spawn.direction)
+	switch(good_food.direction)
 	{
 		case LEFT_UP:
-			food_spawn.y -= speed;
-			food_spawn.x -= speed; 
+			good_food.y -= speed;
+			good_food.x -= speed; 
 			break;
 		case RIGHT_UP:
-			food_spawn.y -= speed;
-			food_spawn.x += speed; 
+			good_food.y -= speed;
+			good_food.x += speed; 
 			break;
 		case LEFT_DOWN:
-			food_spawn.y += speed;
-			food_spawn.x -= speed; 
+			good_food.y += speed;
+			good_food.x -= speed; 
 			break;
 		case RIGHT_DOWN:
-			food_spawn.y += speed;
-			food_spawn.x += speed; 
+			good_food.y += speed;
+			good_food.x += speed; 
 			break;
 	}
 	 
-	return food_spawn; 
+	return good_food; 
 }
 
 void drawSnake(struct snake* head)
@@ -227,8 +244,8 @@ void drawSnake(struct snake* head)
 	while(body != NULL)
 	{
 		DrawRectangle(body->x,   body->y, 
-					  WIDTH,     HEIGHT, (Color){0, 255, 0, 255});
-
+					  WIDTH,     HEIGHT, (Color){100, 40, 110, 255});
+								
 		body = body->next;
 	}
 }
@@ -242,22 +259,33 @@ struct food drawFood(struct food food_spawn)
 		food_spawn.spawned = true; 
 	}
 
-	DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){255, 0, 0, 255}); 
-
-	return food_spawn; 
-}
-
-struct food devourFood(struct snake* head, struct food food_spawn)
-{
-	if(head->x == food_spawn.x && head->y == food_spawn.y)
+	if(food_spawn.status)
 	{
-		return addSnakeParts(&head, food_spawn);
+		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){0, 255, 0, 255});
+	}
+	else
+	{
+		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){255, 0, 0, 255}); 
 	}
 
 	return food_spawn; 
 }
 
-struct food addSnakeParts(struct snake** head, struct food food_spawn)
+struct food devourFood(struct snake* head, struct food food_spawn, bool* bad_food_dev)
+{
+	if(head->x == food_spawn.x && head->y == food_spawn.y && food_spawn.status)
+	{
+		return addSnakeParts(&head, food_spawn);
+	}
+	else if(head->x == food_spawn.x && head->y == food_spawn.y && !food_spawn.status)
+	{
+		*bad_food_dev = true;
+	}
+
+	return food_spawn; 
+}
+
+struct food addSnakeParts(struct snake** head, struct food good_food)
 { 
 	struct snake* new_node = malloc(sizeof(struct snake));
 	if(new_node == NULL)
@@ -276,10 +304,10 @@ struct food addSnakeParts(struct snake** head, struct food food_spawn)
 	
 	current_node->next = new_node;
 
-	food_spawn.spawned = false; 
-	++food_spawn.score;
+	good_food.spawned = false; 
+	++good_food.score;
 
-	return food_spawn;
+	return good_food;
 }
 
 void drawGrid(void)
@@ -306,10 +334,10 @@ void drawBorders(void)
 			     (Color){100, 100, 100, 255});
 }
 
-void drawScore(struct food food_spawn)
+void drawScore(struct food good_food)
 {
 	const char* MESSAGE = "Score: %d";
-	DrawText(TextFormat(MESSAGE, food_spawn.score),1 ,1 , FONT_SIZE, (Color){255, 255, 0, 255});
+	DrawText(TextFormat(MESSAGE, good_food.score),1 ,1 , FONT_SIZE, (Color){255, 255, 0, 255});
 }
 
 bool borderCollision(struct snake* head)
@@ -370,7 +398,7 @@ bool gameOver(void)
 
 bool pauseGame(bool pause)
 {
-	if(IsKeyPressed(KEY_P)&& !pause)
+	if(IsKeyPressed(KEY_P) && !pause)
 	{
 		pause = true; 
 	}
