@@ -5,6 +5,7 @@
 #include "snake_structures.h"
 #include "snake_prototypes.h"
 #include "snake_enumerations.h"
+#include "snake_definitions.h"
 
 int main(void)
 {
@@ -86,7 +87,7 @@ void runGame(struct snake* head, struct food good_food, struct food bad_food)
 
 			pause = pauseGame(pause);
 
-			ClearBackground((Color){0, 0, 0, 0});
+			ClearBackground(THE_VOID);
 
 			drawGrid();
 			drawBorders();
@@ -245,7 +246,7 @@ void drawSnake(struct snake* head)
 	while(body != NULL)
 	{
 		DrawRectangle(body->x,   body->y, 
-					  WIDTH,     HEIGHT, (Color){100, 40, 110, 255});
+					  WIDTH,     HEIGHT, SNAKE_PURPLE);
 								
 		body = body->next;
 	}
@@ -262,11 +263,11 @@ struct food drawFood(struct food food_spawn)
 
 	if(food_spawn.status)
 	{
-		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){0, 255, 0, 255});
+		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, FOOD_GREEN);
 	}
 	else
 	{
-		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, (Color){255, 0, 0, 255}); 
+		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, FOOD_RED); 
 	}
 
 	return food_spawn; 
@@ -318,7 +319,7 @@ void drawGrid(void)
 		for(int x = 0; x <= SCREEN_WIDTH; x += WIDTH)
 		{
 			DrawRectangleLines(x, 	  y, 
-							   WIDTH, HEIGHT, (Color){100, 100, 100, 150});
+							   WIDTH, HEIGHT, GRID_GRAY);
 		}
 	}
 }
@@ -326,19 +327,19 @@ void drawGrid(void)
 void drawBorders(void) 
 {
 	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, 
-				 (Color){100, 100, 100, 255});
+				 BORDER_GRAY);
 	DrawRectangle(0, 0, SCREEN_WIDTH, 20, 
-				 (Color){100, 100, 100, 255});
+				 BORDER_GRAY);
 	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 
-				 (Color){100, 100, 100, 255});
+				 BORDER_GRAY);
 	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, 
-			     (Color){100, 100, 100, 255});
+			     BORDER_GRAY);
 }
 
 void drawScore(struct food good_food)
 {
 	const char* MESSAGE = "Score: %d";
-	DrawText(TextFormat(MESSAGE, good_food.score),1 ,1 , FONT_SIZE, (Color){255, 255, 0, 255});
+	DrawText(TextFormat(MESSAGE, good_food.score),1 ,1 , FONT_SIZE, TEXT_YELLOW);
 }
 
 bool borderCollision(struct snake* head)
@@ -392,13 +393,15 @@ bool gameOver(void)
 {
 	const char* MESSAGE = "Game Over!";
 	DrawText(MESSAGE, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
-			 FONT_SIZE, (Color){255, 255, 0, 255});
+			 FONT_SIZE, TEXT_YELLOW);
 	
 	return true; 
 }
 
 bool pauseGame(bool pause)
 {
+	const char* MESSAGE = "Game is Paused!";
+
 	if(IsKeyPressed(KEY_P) && !pause)
 	{
 		pause = true; 
@@ -406,6 +409,11 @@ bool pauseGame(bool pause)
 	else if(IsKeyPressed(KEY_P) && pause)
 	{
 		pause = false; 
+	}
+	else if(pause)
+	{	
+		DrawText(MESSAGE, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
+				FONT_SIZE, TEXT_YELLOW);
 	}
 	
 	return pause;
