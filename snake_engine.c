@@ -67,8 +67,8 @@ struct food badFoodSetup(void)
 
 void runGame(struct snake* head, struct food good_food, struct food bad_food)
 {
-	float snake_timer = 0.0f, snake_timer_limit = 0.2f;
-	float food_timer = 0.0f, food_timer_limit = 0.5f;
+	float snake_timer = 0.0f, snake_timer_limit = 0.15f;
+	float food_timer = 0.0f, food_timer_limit = 0.3f;
 	
 	bool pause, game_over, bad_food_dev; 
 	pause = game_over = bad_food_dev = false;
@@ -112,6 +112,7 @@ void runGame(struct snake* head, struct food good_food, struct food bad_food)
 			if(food_timer >= food_timer_limit && !pause && !game_over)
 			{
 				good_food = moveFood(good_food);
+				bad_food = moveFood(bad_food);
 				food_timer = 0.0f;
 			}
 			else
@@ -190,51 +191,51 @@ void moveSnake(struct snake* head, int direction)
 
 }
 
-struct food moveFood(struct food good_food)
+struct food moveFood(struct food food_spawn)
 {
 	const int speed = 20;
-	int select_direction = good_food.direction;
+	int select_direction = food_spawn.direction;
 
-	if(good_food.x >= RIGHT_BORDER)
+	if(food_spawn.x >= RIGHT_BORDER)
 	{
 		select_direction = select_direction == RIGHT_UP ? LEFT_UP : LEFT_DOWN;
 	}
-	else if(good_food.x <= LEFT_BORDER)
+	else if(food_spawn.x <= LEFT_BORDER)
 	{
 		select_direction = select_direction == LEFT_UP ? RIGHT_UP : RIGHT_DOWN;
 	}
-	else if(good_food.y <= TOP_BORDER)
+	else if(food_spawn.y <= TOP_BORDER)
 	{
 		select_direction = select_direction == LEFT_UP ? LEFT_DOWN : RIGHT_DOWN;
 	} 
-	else if(good_food.y >= BOTTOM_BORDER)
+	else if(food_spawn.y >= BOTTOM_BORDER)
 	{
 		select_direction = select_direction == LEFT_DOWN ? LEFT_UP : RIGHT_UP;
 	} 
 
-	good_food.direction = select_direction;
+	food_spawn.direction = select_direction;
 
-	switch(good_food.direction)
+	switch(food_spawn.direction)
 	{
 		case LEFT_UP:
-			good_food.y -= speed;
-			good_food.x -= speed; 
+			food_spawn.y -= speed;
+			food_spawn.x -= speed; 
 			break;
 		case RIGHT_UP:
-			good_food.y -= speed;
-			good_food.x += speed; 
+			food_spawn.y -= speed;
+			food_spawn.x += speed; 
 			break;
 		case LEFT_DOWN:
-			good_food.y += speed;
-			good_food.x -= speed; 
+			food_spawn.y += speed;
+			food_spawn.x -= speed; 
 			break;
 		case RIGHT_DOWN:
-			good_food.y += speed;
-			good_food.x += speed; 
+			food_spawn.y += speed;
+			food_spawn.x += speed; 
 			break;
 	}
 	 
-	return good_food; 
+	return food_spawn; 
 }
 
 void drawSnake(struct snake* head)
