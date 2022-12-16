@@ -28,10 +28,10 @@ void runGame(struct snake*, struct food, struct food);
 /// @brief Move the snake according to the direction provided by the integer parameter.
 /// @param struct*
 /// @param int 
-void moveSnake(struct snake* head, int);
+void moveSnake(struct snake*, int);
 
 /// @brief in progress. 
-struct food moveFood(struct food food_spawn);
+struct food moveFood(struct food);
 
 /// @brief Iterates a linked list and draw each node unto the screen, this will write the snake. 
 /// @param struct*
@@ -40,7 +40,7 @@ void drawSnake(struct snake*);
 /// @brief Draw food that may be devoured by the snake. 
 /// @param struct
 /// @return A struct built of the parameter either modified or unmodified.
-struct food drawFood(struct food food_spawn); 
+struct food drawFood(struct food); 
 
 /// @brief Draw a border covering the edges of the screen view. 
 /// @param void 
@@ -64,23 +64,23 @@ int snakeDirection(int, bool);
 /// @param struct*
 /// @param struct
 /// @return A struct used for food logic. 
-struct food devourFood(struct snake* head, struct food food_spawn, bool*); 
+struct food devourFood(struct snake*, struct food, bool*); 
 
 /// @brief Add a new node to the linked list, this will be done to grow the snake. 
 /// @param struct**
 /// @param struct
 /// @return A struct used for food logic. 
-struct food addSnakeParts(struct snake** head, struct food food_spawn);
+struct food addSnakeParts(struct snake**, struct food);
 
 /// @brief Check if the snake has colided with the wall at the edges of the screen. 
-/// @param head* 
+/// @param struct* 
 /// @return A bool depending on if collision was detected(true) or not(false). 
-bool borderCollision(struct snake* head); 
+bool borderCollision(struct snake*); 
 
 /// @brief Check if the snake has colided with itself.
-/// @param head* 
+/// @param struct* 
 /// @return A bool depending on if collision was detected(true) or not(false). 
-bool bodyCollision(struct snake* head);
+bool bodyCollision(struct snake*);
 
 /// @brief Run if game over.
 /// @param void 
@@ -93,5 +93,7 @@ bool gameOver(void);
 bool pauseGame(bool pause); 
 
 /// @brief Not done.
-/// @param bool
-void snakeFoodCollision();
+/// @param struct*
+/// @param struct
+/// @return A food struct containing the change made to the food in question. 
+struct food snakeFoodCollision(struct snake*, struct food);

@@ -68,7 +68,7 @@ food badFoodSetup(void)
 
 void runGame(snake head, food good_food, food bad_food)
 {
-	float snake_timer = 0.0f, snake_timer_limit = 0.15f;
+	float snake_timer = 0.0f, snake_timer_limit = 0.20f;
 	float food_timer = 0.0f, food_timer_limit = 0.3f;
 	
 	bool pause, game_over, bad_food_dev; 
@@ -240,14 +240,12 @@ food moveFood(food food_spawn)
 
 void drawSnake(snake head)
 {
-	snake body = head;
-
-	while(body != NULL)
+	while(head != NULL)
 	{
-		DrawRectangle(body->x,   body->y, 
+		DrawRectangle(head->x,   head->y, 
 					  WIDTH,     HEIGHT, SNAKE_PURPLE);
 								
-		body = body->next;
+		head = head->next;
 	}
 }
 
@@ -418,6 +416,18 @@ bool pauseGame(bool pause)
 	return pause;
 }
 
-void snakeFoodCollision(food spawn_food)
+food snakeFoodCollision(snake head, food food_spawn)
 {
+	head = head->next; 
+
+	while(head != NULL)
+	{
+		if(food_spawn.x == head->x && food_spawn.y == head->y)
+		{
+			
+		}
+		head = head->next; 	
+	}
+
+	return food_spawn; 
 }
