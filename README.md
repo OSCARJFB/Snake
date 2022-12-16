@@ -1,6 +1,6 @@
 # Snake
-A snake game written in C
-
+A snake game written in C, graphics added thanks to https://www.raylib.com/
+https://www.raylib.com/
 To be done:
 - Feature:  Food should bounce of the snake (optional).
 - Feature:  Make sure everything is paused until the game is started.
