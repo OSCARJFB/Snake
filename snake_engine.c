@@ -79,13 +79,6 @@ void runGame(struct snake* head, struct food good_food, struct food bad_food)
 	while(!WindowShouldClose())
 	{
 		BeginDrawing();
-			
-			if(borderCollision(head) || bodyCollision(head) || bad_food_dev)
-			{	
-				game_over = gameOver(); 
-			}
-
-			pause = pauseGame(pause);
 
 			ClearBackground(THE_VOID);
 
@@ -98,6 +91,12 @@ void runGame(struct snake* head, struct food good_food, struct food bad_food)
 			
 			good_food = devourFood(head, good_food, &bad_food_dev); 
 			bad_food = devourFood(head, bad_food, &bad_food_dev); 
+
+			pause = pauseGame(pause);
+			if(borderCollision(head) || bodyCollision(head) || bad_food_dev)
+			{	
+				game_over = gameOver(); 
+			}
 
 			if(snake_timer >= snake_timer_limit && !pause && !game_over)
 			{
@@ -391,8 +390,8 @@ bool bodyCollision(struct snake* head)
 
 bool gameOver(void)
 {
-	const char* MESSAGE = "Game Over!";
-	DrawText(MESSAGE, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
+	const char* MESSAGE = "Game over!";
+	DrawText(MESSAGE, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 50, 
 			 FONT_SIZE, TEXT_YELLOW);
 	
 	return true; 
@@ -400,7 +399,7 @@ bool gameOver(void)
 
 bool pauseGame(bool pause)
 {
-	const char* MESSAGE = "Game is Paused!";
+	const char* MESSAGE = "Game is paused!";
 
 	if(IsKeyPressed(KEY_P) && !pause)
 	{
@@ -412,7 +411,7 @@ bool pauseGame(bool pause)
 	}
 	else if(pause)
 	{	
-		DrawText(MESSAGE, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 45, 
+		DrawText(MESSAGE, SCREEN_WIDTH / 2 - 70, SCREEN_HEIGHT / 2 - 50, 
 				FONT_SIZE, TEXT_YELLOW);
 	}
 	
