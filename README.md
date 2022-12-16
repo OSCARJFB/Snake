@@ -7,6 +7,6 @@ To be done:
 - Feature:  Change look of the head of the snake. 
 - Feautre:  Better snake spawn.
 - Feature:  Make enemies and foods bounce of the snakes body(not the head).
-- Refactor: Clean up the code.
+- Refactor: Clean up the code if needed.
 - Test:     Final testing 
 finalized:  The game is now done. 

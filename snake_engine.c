@@ -11,9 +11,9 @@ int main(void)
 {
 	gameSetup();
 
-	struct snake* head = snakeSetup();
-	struct food good_food = goodFoodSetup();
-	struct food bad_food = badFoodSetup(); 
+	snake head = snakeSetup();
+	food good_food = goodFoodSetup();
+	food bad_food = badFoodSetup(); 
 
 	runGame(head, good_food, bad_food);
 
@@ -29,9 +29,9 @@ void gameSetup(void)
 	srand(time(NULL));
 }
 
-struct snake* snakeSetup(void)
+snake snakeSetup(void)
 {
-	struct snake* head = malloc(sizeof(struct snake));
+	snake head = malloc(sizeof(struct snake));
 	if(head == NULL)
 	{
 		exit(1); 
@@ -44,9 +44,9 @@ struct snake* snakeSetup(void)
 	return head;
 }
 
-struct food goodFoodSetup(void)
+food goodFoodSetup(void)
 {
-	struct food good_food;
+	food good_food;
 	good_food.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
 	good_food.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
 	good_food.direction = rand() % 4 + 1, good_food.score = 0;
@@ -55,9 +55,9 @@ struct food goodFoodSetup(void)
 	return good_food;
 }
 
-struct food badFoodSetup(void)
+food badFoodSetup(void)
 {
-	struct food bad_food;
+	food bad_food;
 	bad_food.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
 	bad_food.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
 	bad_food.direction = rand() % 4 + 1, bad_food.score = 0;
@@ -66,7 +66,7 @@ struct food badFoodSetup(void)
 	return bad_food;
 }
 
-void runGame(struct snake* head, struct food good_food, struct food bad_food)
+void runGame(snake head, food good_food, food bad_food)
 {
 	float snake_timer = 0.0f, snake_timer_limit = 0.15f;
 	float food_timer = 0.0f, food_timer_limit = 0.3f;
@@ -152,11 +152,11 @@ int snakeDirection(int direction, bool pause)
 	return direction;
 }
 
-void moveSnake(struct snake* head, int direction)
+void moveSnake(snake head, int direction)
 {
 	const int speed = 20;
 	
-	struct snake* body = head;
+	snake body = head;
 	body = body->next;
 
 	int temp_x = 0, temp_y = 0;
@@ -191,7 +191,7 @@ void moveSnake(struct snake* head, int direction)
 
 }
 
-struct food moveFood(struct food food_spawn)
+food moveFood(food food_spawn)
 {
 	const int speed = 20;
 	int select_direction = food_spawn.direction;
@@ -238,9 +238,9 @@ struct food moveFood(struct food food_spawn)
 	return food_spawn; 
 }
 
-void drawSnake(struct snake* head)
+void drawSnake(snake head)
 {
-	struct snake* body = head;
+	snake body = head;
 
 	while(body != NULL)
 	{
@@ -251,7 +251,7 @@ void drawSnake(struct snake* head)
 	}
 }
 
-struct food drawFood(struct food food_spawn)
+food drawFood(food food_spawn)
 {
 	if(!food_spawn.spawned)
 	{
@@ -272,7 +272,7 @@ struct food drawFood(struct food food_spawn)
 	return food_spawn; 
 }
 
-struct food devourFood(struct snake* head, struct food food_spawn, bool* bad_food_dev)
+food devourFood(snake head, food food_spawn, bool* bad_food_dev)
 {
 	if(head->x == food_spawn.x && head->y == food_spawn.y && food_spawn.status)
 	{
@@ -286,9 +286,9 @@ struct food devourFood(struct snake* head, struct food food_spawn, bool* bad_foo
 	return food_spawn; 
 }
 
-struct food addSnakeParts(struct snake** head, struct food good_food)
+food addSnakeParts(snake* head, food good_food)
 { 
-	struct snake* new_node = malloc(sizeof(struct snake));
+	snake new_node = malloc(sizeof(struct snake));
 	if(new_node == NULL)
 	{
 		exit(1);
@@ -297,7 +297,7 @@ struct food addSnakeParts(struct snake** head, struct food good_food)
 	new_node->next = NULL;
 	new_node->x = -20, new_node->y = -20;
 
-	struct snake* current_node = *head;
+	snake current_node = *head;
 	while(current_node->next != NULL)
 	{
 		current_node = current_node->next;
@@ -335,13 +335,13 @@ void drawBorders(void)
 			     BORDER_GRAY);
 }
 
-void drawScore(struct food good_food)
+void drawScore(food good_food)
 {
 	const char* MESSAGE = "Score: %d";
 	DrawText(TextFormat(MESSAGE, good_food.score),1 ,1 , FONT_SIZE, TEXT_YELLOW);
 }
 
-bool borderCollision(struct snake* head)
+bool borderCollision(snake head)
 {
 	bool isColliding = false; 
 
@@ -368,11 +368,11 @@ bool borderCollision(struct snake* head)
 	return isColliding; 
 }
 
-bool bodyCollision(struct snake* head)
+bool bodyCollision(snake head)
 {
 	bool isColliding = false; 
 
-	struct snake* body = head; 
+	snake body = head; 
 	body = body->next; 
 	
 	while(body != NULL)
@@ -416,4 +416,8 @@ bool pauseGame(bool pause)
 	}
 	
 	return pause;
+}
+
+void snakeFoodCollision(food spawn_food)
+{
 }

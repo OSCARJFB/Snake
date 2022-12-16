@@ -91,3 +91,7 @@ bool gameOver(void);
 /// @param bool
 /// @return A bool set to true or false depending on status of the bool parameter.
 bool pauseGame(bool pause); 
+
+/// @brief Not done.
+/// @param bool
+void snakeFoodCollision();
