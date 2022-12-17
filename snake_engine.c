@@ -10,12 +10,9 @@
 int main(void)
 {
 	gameSetup();
-
 	snake head = snakeSetup();
-	food good_food = goodFoodSetup();
-	food bad_food = badFoodSetup(); 
-
-	runGame(head, good_food, bad_food);
+	food food_spawn = foodSetup();
+	runGame(head, food_spawn);
 
 	return 0;
 }
@@ -23,9 +20,9 @@ int main(void)
 void gameSetup(void)
 {
 	const char* SCREEN_TITLE = "Snake Game"; 
+
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE); 
 	SetTargetFPS(60);
-
 	srand(time(NULL));
 }
 
@@ -44,36 +41,22 @@ snake snakeSetup(void)
 	return head;
 }
 
-food goodFoodSetup(void)
+food foodSetup(void)
 {
 	food good_food;
-	good_food.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
-	good_food.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
-	good_food.direction = rand() % 4 + 1, good_food.score = 0;
-	good_food.status = true, good_food.spawned = true; 
+	good_food.x = 20 * (rand() % (360 / 20) + 1); 
+	good_food.y = 20 * (rand() % (360 / 20) + 1); 
+	good_food.direction = rand() % 4 + 1;
+	good_food.score = 0;
+	good_food.spawned = true; 
 	
 	return good_food;
 }
 
-food badFoodSetup(void)
+void runGame(snake head, food food_spawn)
 {
-	food bad_food;
-	bad_food.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
-	bad_food.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
-	bad_food.direction = rand() % 4 + 1, bad_food.score = 0;
-	bad_food.status = false, bad_food.spawned = true; 
-
-	return bad_food;
-}
-
-void runGame(snake head, food good_food, food bad_food)
-{
-	float snake_timer = 0.0f, snake_timer_limit = 0.20f;
-	float food_timer = 0.0f, food_timer_limit = 0.3f;
-	
-	bool pause, game_over, bad_food_dev; 
-	pause = game_over = bad_food_dev = false;
-
+	float timer = 0.0f, limit = 0.15f;
+	bool pause = false, game_over = false;
 	int direction = 0; 
 
 	while(!WindowShouldClose())
@@ -84,40 +67,26 @@ void runGame(snake head, food good_food, food bad_food)
 
 			drawGrid();
 			drawBorders();
-			drawScore(good_food);
+			drawScore(food_spawn.score);
 			drawSnake(head);
-			good_food = drawFood(good_food);
-			bad_food = drawFood(bad_food);
-			
-			good_food = devourFood(head, good_food, &bad_food_dev); 
-			bad_food = devourFood(head, bad_food, &bad_food_dev); 
-
+			food_spawn = drawFood(food_spawn); 
+			food_spawn = devourFood(head, food_spawn);
 			pause = pauseGame(pause);
-			if(borderCollision(head) || bodyCollision(head) || bad_food_dev)
+
+			if(borderCollision(head) || bodyCollision(head))
 			{	
 				game_over = gameOver(); 
 			}
 
-			if(snake_timer >= snake_timer_limit && !pause && !game_over)
+			if(timer >= limit && !pause && !game_over)
 			{
 				direction = snakeDirection(direction, pause);
 				moveSnake(head, direction);
-				snake_timer = 0.0f;
+				timer = 0.0f;
 			}
 			else
 			{
-				snake_timer += GetFrameTime();
-			}
-
-			if(food_timer >= food_timer_limit && !pause && !game_over)
-			{
-				good_food = moveFood(good_food);
-				bad_food = moveFood(bad_food);
-				food_timer = 0.0f;
-			}
-			else
-			{
-				food_timer += GetFrameTime();
+				timer += GetFrameTime();
 			}
 
 		EndDrawing();
@@ -191,53 +160,6 @@ void moveSnake(snake head, int direction)
 
 }
 
-food moveFood(food food_spawn)
-{
-	const int speed = 20;
-	int select_direction = food_spawn.direction;
-
-	if(food_spawn.x >= RIGHT_BORDER)
-	{
-		select_direction = select_direction == RIGHT_UP ? LEFT_UP : LEFT_DOWN;
-	}
-	else if(food_spawn.x <= LEFT_BORDER)
-	{
-		select_direction = select_direction == LEFT_UP ? RIGHT_UP : RIGHT_DOWN;
-	}
-	else if(food_spawn.y <= TOP_BORDER)
-	{
-		select_direction = select_direction == LEFT_UP ? LEFT_DOWN : RIGHT_DOWN;
-	} 
-	else if(food_spawn.y >= BOTTOM_BORDER)
-	{
-		select_direction = select_direction == LEFT_DOWN ? LEFT_UP : RIGHT_UP;
-	} 
-
-	food_spawn.direction = select_direction;
-
-	switch(food_spawn.direction)
-	{
-		case LEFT_UP:
-			food_spawn.y -= speed;
-			food_spawn.x -= speed; 
-			break;
-		case RIGHT_UP:
-			food_spawn.y -= speed;
-			food_spawn.x += speed; 
-			break;
-		case LEFT_DOWN:
-			food_spawn.y += speed;
-			food_spawn.x -= speed; 
-			break;
-		case RIGHT_DOWN:
-			food_spawn.y += speed;
-			food_spawn.x += speed; 
-			break;
-	}
-	 
-	return food_spawn; 
-}
-
 void drawSnake(snake head)
 {
 	while(head != NULL)
@@ -253,32 +175,21 @@ food drawFood(food food_spawn)
 {
 	if(!food_spawn.spawned)
 	{
-		food_spawn.x = WIDTH * (rand() % ((SCREEN_WIDTH - 60) / 20) + 2);
-		food_spawn.y = HEIGHT * (rand() % ((SCREEN_HEIGHT - 60) / 20) + 2);
+		food_spawn.x = 20 * (rand() % (360 / 20) + 1); 
+		food_spawn.y = 20 * (rand() % (360 / 20) + 1); 
 		food_spawn.spawned = true; 
 	}
 
-	if(food_spawn.status)
-	{
-		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, FOOD_GREEN);
-	}
-	else
-	{
-		DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, FOOD_RED); 
-	}
+	DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, FOOD_GREEN);
 
 	return food_spawn; 
 }
 
-food devourFood(snake head, food food_spawn, bool* bad_food_dev)
+food devourFood(snake head, food food_spawn)
 {
-	if(head->x == food_spawn.x && head->y == food_spawn.y && food_spawn.status)
+	if(head->x == food_spawn.x && head->y == food_spawn.y)
 	{
 		return addSnakeParts(&head, food_spawn);
-	}
-	else if(head->x == food_spawn.x && head->y == food_spawn.y && !food_spawn.status)
-	{
-		*bad_food_dev = true;
 	}
 
 	return food_spawn; 
@@ -323,20 +234,16 @@ void drawGrid(void)
 
 void drawBorders(void) 
 {
-	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, 
-				 BORDER_GRAY);
-	DrawRectangle(0, 0, SCREEN_WIDTH, 20, 
-				 BORDER_GRAY);
-	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 
-				 BORDER_GRAY);
-	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, 
-			     BORDER_GRAY);
+	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, BORDER_GRAY);
+	DrawRectangle(0, 0, SCREEN_WIDTH, 20, BORDER_GRAY);
+	DrawRectangle(SCREEN_WIDTH - 20, 0, SCREEN_WIDTH, SCREEN_HEIGHT, BORDER_GRAY);
+	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, BORDER_GRAY);
 }
 
-void drawScore(food good_food)
+void drawScore(int score)
 {
 	const char* MESSAGE = "Score: %d";
-	DrawText(TextFormat(MESSAGE, good_food.score),1 ,1 , FONT_SIZE, TEXT_YELLOW);
+	DrawText(TextFormat(MESSAGE, score), 1 ,1 , FONT_SIZE, TEXT_YELLOW);
 }
 
 bool borderCollision(snake head)
@@ -414,20 +321,4 @@ bool pauseGame(bool pause)
 	}
 	
 	return pause;
-}
-
-food snakeFoodCollision(snake head, food food_spawn)
-{
-	head = head->next; 
-
-	while(head != NULL)
-	{
-		if(food_spawn.x == head->x && food_spawn.y == head->y)
-		{
-			
-		}
-		head = head->next; 	
-	}
-
-	return food_spawn; 
 }

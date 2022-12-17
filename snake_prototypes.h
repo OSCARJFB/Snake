@@ -11,27 +11,18 @@ struct snake* snakeSetup(void);
 /// @brief Initiate start location of good food. 
 /// @param void
 /// @return A structure. 
-struct food goodFoodSetup(void);
-
-/// @brief Initiate start location of bad food. 
-/// @param void
-/// @return A structure. 
-struct food badFoodSetup(void);
+struct food foodSetup(void);
 
 /// @brief Excute the game loop and run until end of the game. 
 /// @brief This functions calls most of the other logic in this game. 
 /// @param struct*
 /// @param struct 
-/// @param struct
-void runGame(struct snake*, struct food, struct food);
+void runGame(struct snake*, struct food);
 
 /// @brief Move the snake according to the direction provided by the integer parameter.
 /// @param struct*
 /// @param int 
 void moveSnake(struct snake*, int);
-
-/// @brief in progress. 
-struct food moveFood(struct food);
 
 /// @brief Iterates a linked list and draw each node unto the screen, this will write the snake. 
 /// @param struct*
@@ -50,9 +41,9 @@ void drawBorders(void);
 /// @param void 
 void drawGrid(void);
 
-/// @brief Draw a grid covering the background of the screen.
-/// @param void 
-void drawScore(struct food);
+/// @brief Draw current score to the screen.
+/// @param int 
+void drawScore(int);
 
 /// @brief Get user input from the keyboard which can used to steer the movement direction of the snake. 
 /// @param int
@@ -64,7 +55,7 @@ int snakeDirection(int, bool);
 /// @param struct*
 /// @param struct
 /// @return A struct used for food logic. 
-struct food devourFood(struct snake*, struct food, bool*); 
+struct food devourFood(struct snake*, struct food); 
 
 /// @brief Add a new node to the linked list, this will be done to grow the snake. 
 /// @param struct**
@@ -91,9 +82,3 @@ bool gameOver(void);
 /// @param bool
 /// @return A bool set to true or false depending on status of the bool parameter.
 bool pauseGame(bool pause); 
-
-/// @brief Not done.
-/// @param struct*
-/// @param struct
-/// @return A food struct containing the change made to the food in question. 
-struct food snakeFoodCollision(struct snake*, struct food);

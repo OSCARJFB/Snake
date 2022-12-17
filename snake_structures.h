@@ -12,12 +12,12 @@ typedef struct snake* snake;
 
 /// @brief This structure holds the coordinates of food,
 /// @brief how much food that has been devoured(score)
-/// @brief and also if food is spawned or not.  
+/// @brief and also if food is spawned or not. 
 struct food
 {
 	int x, y, direction; 
 	int score;
-	bool spawned, status; 
+	bool spawned;
 };
 
 /// @brief This structure holds the coordinates of food,
