@@ -1,3 +1,7 @@
+/*
+	Writen by: Oscar Bergström
+*/
+
 enum game_props
 {
 	/// @brief Grid height.
@@ -19,9 +23,6 @@ enum game_props
     /// @brief Border collision 
     BOTTOM_BORDER = 360,
 
-    /// @brief The size of all text in this game.
-    FONT_SIZE = 20, 
-
     /// @brief Movement direction of food and enemy. 
     LEFT_UP = 1,
     /// @brief Movement direction of food and enemy. 
@@ -31,6 +32,21 @@ enum game_props
     /// @brief Movement direction of food and enemy. 
     RIGHT_DOWN = 4, 
 
-    /// @brief Array size of all food.  
-    ALL_FOOD = 1
+    /// @brief The size of all text in this game.
+    FONT_SIZE = 20, 
+
+    /// @brief Pause message x position. 
+    PAUSE_X = 130,
+    /// @brief Pause message y position. 
+    PAUSE_Y = 150,
+
+    /// @brief Pause message x position. 
+    GAME_OVER_X = 155,
+    /// @brief Pause message y position. 
+    GAME_OVER_Y = 150,
+
+    /// @brief Pause message x position. 
+    SCORE_X = 1,
+    /// @brief Pause message y position. 
+    SCORE_Y = 1,
 };

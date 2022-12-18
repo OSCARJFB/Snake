@@ -1,3 +1,7 @@
+/*
+	Writen by: Oscar Bergström
+*/
+
 ///@brief Color of all text in game. 
 #define TEXT_YELLOW (Color){255, 255, 0, 255}
 

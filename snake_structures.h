@@ -1,3 +1,7 @@
+/*
+	Writen by: Oscar Bergström
+*/
+
 /// @brief This linked list keeps track of the snakes body parts.
 /// @brief All nodes get a value dependent on how the head traverses the screen. 
 struct snake

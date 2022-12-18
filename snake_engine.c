@@ -253,7 +253,8 @@ void drawBorders(void)
 void drawScore(int score)
 {
 	const char* MESSAGE = "Score: %d";
-	DrawText(TextFormat(MESSAGE, score), 1 ,1 , FONT_SIZE, TEXT_YELLOW);
+	DrawText(TextFormat(MESSAGE, score), 
+			 SCORE_X , SCORE_Y, FONT_SIZE, TEXT_YELLOW);
 }
 
 bool borderCollision(snake head)
@@ -306,8 +307,9 @@ bool bodyCollision(snake head)
 bool gameOver(void)
 {
 	const char* MESSAGE = "Game over!";
-	DrawText(MESSAGE, SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 50, 
-			 FONT_SIZE, TEXT_YELLOW);
+
+	DrawText(MESSAGE, 
+			 GAME_OVER_X, GAME_OVER_Y, FONT_SIZE, TEXT_YELLOW);
 	
 	return true; 
 }
@@ -326,8 +328,8 @@ bool pauseGame(bool pause)
 	}
 	else if(pause)
 	{	
-		DrawText(MESSAGE, SCREEN_WIDTH / 2 - 70, SCREEN_HEIGHT / 2 - 50, 
-				FONT_SIZE, TEXT_YELLOW);
+		DrawText(MESSAGE, 
+				 PAUSE_X, PAUSE_Y, FONT_SIZE, TEXT_YELLOW);
 	}
 	
 	return pause;

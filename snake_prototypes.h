@@ -1,3 +1,7 @@
+/*
+	Writen by: Oscar Bergström
+*/
+
 /// @brief Initiate game settings. Create a window, set size the size of that window, 
 /// @brief target fps and do seed for random value generation.
 /// @param void
