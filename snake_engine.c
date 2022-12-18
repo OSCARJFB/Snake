@@ -1,3 +1,7 @@
+/*
+	Writen by: Oscar Bergström
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <raylib.h>
@@ -43,14 +47,20 @@ snake snakeSetup(void)
 
 food foodSetup(void)
 {
-	food good_food;
-	good_food.x = 20 * (rand() % (360 / 20) + 1); 
-	good_food.y = 20 * (rand() % (360 / 20) + 1); 
-	good_food.direction = rand() % 4 + 1;
-	good_food.score = 0;
-	good_food.spawned = true; 
+	food food_spawn;
 	
-	return good_food;
+	food_spawn.x = 20 * (rand() % (360 / 20) + 1); 
+	food_spawn.y = 20 * (rand() % (360 / 20) + 1); 
+	if(food_spawn.x == SCREEN_WIDTH / 2 && food_spawn.y == SCREEN_HEIGHT / 2)
+	{
+		food_spawn.x += 20;
+	}
+
+	food_spawn.direction = rand() % 4 + 1;
+	food_spawn.score = 0;
+	food_spawn.spawned = true; 
+	
+	return food_spawn;
 }
 
 void runGame(snake head, food food_spawn)
