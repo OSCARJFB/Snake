@@ -1,8 +1,12 @@
 /*
 	Writen by: Oscar Bergström
+    https://github.com/OSCARJFB
 */
 
-enum game_props
+#ifndef SNAKE_ENUMERATIONS_H
+#define SNAKE_ENUMERATIONS_H
+
+enum snakeRaylibEnums
 {
 	/// @brief Grid height.
 	HEIGHT = 20,
@@ -50,3 +54,13 @@ enum game_props
     /// @brief Pause message y position. 
     SCORE_Y = 1,
 };
+
+enum snakeConsoleEnums
+{
+	grid_len = 12,
+	grid_wid = 22,
+	snake_spawn = 6,
+	ESCAPE_KEY = 27,
+};
+
+#endif

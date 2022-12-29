@@ -1,6 +1,10 @@
 /*
 	Writen by: Oscar Bergström
+	https://github.com/OSCARJFB
 */
+
+#ifndef SNAKE_MACROS_H
+#define SNAKE_MACROS_H
 
 ///@brief Color of all text in game. 
 #define TEXT_YELLOW (Color){255, 255, 0, 255}
@@ -19,3 +23,14 @@
 
 ///@brief Background. 
 #define THE_VOID (Color){0, 0, 0, 0}
+
+/// @brief On Failure. 
+#define FAIL -1
+
+/// @brief On success.
+#define SUCCESS 1
+
+/// @brief A byte. 
+#define ONE_BYTE 1
+
+#endif

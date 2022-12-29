@@ -1,5 +1,6 @@
 /*
 	Writen by: Oscar Bergström
+	https://github.com/OSCARJFB
 */
 
 #include <stdio.h>
@@ -7,9 +8,9 @@
 #include <raylib.h>
 #include <time.h>
 #include "snake_structures.h"
-#include "snake_prototypes.h"
+#include "snake_prototypes_raylib.h"
 #include "snake_enumerations.h"
-#include "snake_definitions.h"
+#include "snake_macros.h"
 
 int main(void)
 {
@@ -18,7 +19,7 @@ int main(void)
 	food food_spawn = foodSetup();
 	runGame(head, food_spawn);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void gameSetup(void)
@@ -35,7 +36,7 @@ snake snakeSetup(void)
 	snake head = malloc(sizeof(struct snake));
 	if(head == NULL)
 	{
-		exit(1); 
+		exit(EXIT_FAILURE); 
 	}
 	
 	head->next = NULL;
@@ -114,17 +115,20 @@ int snakeDirection(int direction, bool pause)
 		{
 			direction = KEY_W;
 		}
-		else if(IsKeyDown(KEY_A) && direction != KEY_D)
+		
+		if(IsKeyDown(KEY_A) && direction != KEY_D)
 		{
 			direction = KEY_A;
 		}
-		else if(IsKeyDown(KEY_S) && direction != KEY_W)
+		
+		if(IsKeyDown(KEY_S) && direction != KEY_W)
 		{
 			direction = KEY_S;
 		}
-		else if(IsKeyDown(KEY_D) && direction != KEY_A)
+		
+		if(IsKeyDown(KEY_D) && direction != KEY_A)
 		{
-			direction  = KEY_D;
+			direction = KEY_D;
 		}
 	}
 
@@ -190,7 +194,8 @@ food drawFood(food food_spawn)
 		food_spawn.spawned = true; 
 	}
 
-	DrawRectangle(food_spawn.x, food_spawn.y, WIDTH, HEIGHT, FOOD_GREEN);
+	DrawRectangle(food_spawn.x, food_spawn.y, 
+				  WIDTH, 		HEIGHT, FOOD_GREEN);
 
 	return food_spawn; 
 }
@@ -210,7 +215,7 @@ food addSnakeParts(snake* head, food good_food)
 	snake new_node = malloc(sizeof(struct snake));
 	if(new_node == NULL)
 	{
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	
 	new_node->next = NULL;
@@ -309,7 +314,8 @@ bool gameOver(void)
 	const char* MESSAGE = "Game over!";
 
 	DrawText(MESSAGE, 
-			 GAME_OVER_X, GAME_OVER_Y, FONT_SIZE, TEXT_YELLOW);
+			 GAME_OVER_X, GAME_OVER_Y, 
+			 FONT_SIZE,   TEXT_YELLOW);
 	
 	return true; 
 }
@@ -329,7 +335,8 @@ bool pauseGame(bool pause)
 	else if(pause)
 	{	
 		DrawText(MESSAGE, 
-				 PAUSE_X, PAUSE_Y, FONT_SIZE, TEXT_YELLOW);
+				 PAUSE_X, 	PAUSE_Y, 
+				 FONT_SIZE, TEXT_YELLOW);
 	}
 	
 	return pause;
