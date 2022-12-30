@@ -17,13 +17,13 @@
 #include "snake_macros.h"
 
 /* Used to reset terminal from raw mode. */
-struct termios reset_terminal; 
+struct termios reset_terminal;
 
 int main(void)
 {
-	if(!rawSetup())
+	if (!rawSetup())
 	{
-		return EXIT_FAILURE; 
+		return EXIT_FAILURE;
 	}
 
 	char gameBoard[grid_len][grid_wid];
@@ -84,91 +84,91 @@ void boardSetup(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 
 void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 {
-	char byte, direction; 
+	char byte, direction;
 
-	while(byte != ESCAPE_KEY)
-	{	
-		byte = _kbhit(); 
+	while (byte != ESCAPE_KEY)
+	{
+		byte = _kbhit();
 		direction = translateByte(byte, direction);
 		renderBoard(gameBoard);
-		moveSnake(head, direction, gameBoard); 
+		moveSnake(head, direction, gameBoard);
 	}
 }
 
 int _kbhit()
 {
 	char byte = ' ';
-	int result; 
+	int result;
 
 	result = read(STDIN_FILENO, &byte, ONE_BYTE);
 
-	return byte = result == SUCCESS ? byte : FAIL; 
+	return byte = result == SUCCESS ? byte : FAIL;
 }
 
 int translateByte(char byte, char direction)
 {
 	switch (byte)
 	{
-		case 'w':
-			if(direction != 's')
-			{
-				direction = byte;
-			}
-			break;
-		case 'a':
-			if(direction != 'd')
-			{
-				direction = byte;
-			}
-			break;
-		case 's':
-			if(direction != 'w')
-			{
-				direction = byte;
-			}
-			break;
-		case 'd':
-			if(direction != 'a')
-			{
-				direction = byte;
-			}
-			break;
-		default:
-			break;
+	case 'w':
+		if (direction != 's')
+		{
+			direction = byte;
+		}
+		break;
+	case 'a':
+		if (direction != 'd')
+		{
+			direction = byte;
+		}
+		break;
+	case 's':
+		if (direction != 'w')
+		{
+			direction = byte;
+		}
+		break;
+	case 'd':
+		if (direction != 'a')
+		{
+			direction = byte;
+		}
+		break;
+	default:
+		break;
 	}
 
-	return direction; 
+	return direction;
 }
 
 int rawSetup()
 {
-	int result = 0; 
-	
+	int result = 0;
+
 	result = tcgetattr(STDIN_FILENO, &reset_terminal);
-	if(result == FAIL)
+	if (result == FAIL)
 	{
-		return FAIL; 
+		return FAIL;
 	}
 
 	atexit(rawDisable);
 
-	struct termios raw_terminal; 
-	if(memcpy(&raw_terminal, &reset_terminal, sizeof(struct termios)) == NULL)
+	struct termios raw_terminal;
+	if (memcpy(&raw_terminal, &reset_terminal, sizeof(struct termios)) == NULL)
 	{
-		return FAIL; 
+		return FAIL;
 	}
 
-	raw_terminal.c_lflag &= ~(ICANON | ECHO); 
+	raw_terminal.c_lflag &= ~(ICANON | ECHO);
 	raw_terminal.c_cc[VMIN] = 0;
-  	raw_terminal.c_cc[VTIME] = 1;
+	raw_terminal.c_cc[VTIME] = 0;
 
 	result = tcsetattr(STDIN_FILENO, TCSANOW, &raw_terminal);
-	if(result == FAIL)
+	if (result == FAIL)
 	{
-		return FAIL; 
+		return FAIL;
 	}
 
-	return SUCCESS; 
+	return SUCCESS;
 }
 
 void rawDisable()
@@ -183,15 +183,15 @@ void renderBoard(char gameBoard[grid_len][grid_wid])
 	{
 		for (int x = 0; x < grid_wid; ++x)
 		{
-			if(y == 0 || y == grid_len - 1)
+			if (y == 0 || y == grid_len - 1)
 			{
 				printf("#");
 			}
-			else if(x == 0 || x == grid_wid - 1)
+			else if (x == 0 || x == grid_wid - 1)
 			{
 				printf("#");
 			}
-			else 
+			else
 			{
 				printf("%c", gameBoard[y][x]);
 			}
@@ -203,41 +203,41 @@ void renderBoard(char gameBoard[grid_len][grid_wid])
 void moveSnake(snake head, char direction, char gameBoard[grid_len][grid_wid])
 {
 	snake body = head;
-	body = body->next; 
-	
-	int temp_x, temp_y; 
-	int old_X = head->x, old_y = head->y; 
-	
+	body = body->next;
+
+	int temp_x, temp_y;
+	int old_X = head->x, old_y = head->y;
+
 	gameBoard[old_y][old_X] = ' ';
 
 	switch (direction)
 	{
-		case 'w':
-			head->y -= 1;
-			break;
-		case 'a':
-			head->x -= 1; 
-			break;
-		case 's':
-			head->y += 1;
-			break;  
-		case 'd':
-			head->x += 1; 
-			break; 
-	} 
-	
+	case 'w':
+		head->y -= 1;
+		break;
+	case 'a':
+		head->x -= 1;
+		break;
+	case 's':
+		head->y += 1;
+		break;
+	case 'd':
+		head->x += 1;
+		break;
+	}
+
 	gameBoard[head->y][head->x] = 'O';
 
-	while(body != NULL)
+	while (body != NULL)
 	{
-		temp_x = body->x, temp_y = body->y; 
+		temp_x = body->x, temp_y = body->y;
 		body->x = old_X, body->y = old_y;
-		
-		gameBoard[body->y][body->x] = 'O';
-		gameBoard[temp_y][temp_x] = ' '; 
-		
-		old_X = temp_x, old_y = temp_y; 
 
-		body = body->next; 
+		gameBoard[body->y][body->x] = 'O';
+		gameBoard[temp_y][temp_x] = ' ';
+
+		old_X = temp_x, old_y = temp_y;
+
+		body = body->next;
 	}
 }

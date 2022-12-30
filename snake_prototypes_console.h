@@ -15,8 +15,8 @@ food foodSetUp(void);
 void boardSetup(snake, food, char[grid_len][grid_wid]);
 void runGame(snake, food, char[grid_len][grid_wid]);
 int _kbhit();
-int translateByte(char, char); 
+int translateByte(char, char);
 void renderBoard(char[grid_len][grid_wid]);
-void moveSnake(snake, char, char[grid_len][grid_wid]); 
+void moveSnake(snake, char, char[grid_len][grid_wid]);
 
-#endif
+#endif // SNAKE_PROTOTYPES_CONSOLE_H

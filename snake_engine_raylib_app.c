@@ -24,9 +24,9 @@ int main(void)
 
 void gameSetup(void)
 {
-	const char* SCREEN_TITLE = "Snake Game"; 
+	const char *SCREEN_TITLE = "Snake Game";
 
-	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE); 
+	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE);
 	SetTargetFPS(60);
 	srand(time(NULL));
 }
@@ -34,14 +34,14 @@ void gameSetup(void)
 snake snakeSetup(void)
 {
 	snake head = malloc(sizeof(struct snake));
-	if(head == NULL)
+	if (head == NULL)
 	{
-		exit(EXIT_FAILURE); 
+		exit(EXIT_FAILURE);
 	}
-	
+
 	head->next = NULL;
 	head->y = SCREEN_WIDTH / 2;
-	head->x = SCREEN_HEIGHT / 2; 
+	head->x = SCREEN_HEIGHT / 2;
 
 	return head;
 }
@@ -49,18 +49,18 @@ snake snakeSetup(void)
 food foodSetup(void)
 {
 	food food_spawn;
-	
-	food_spawn.x = 20 * (rand() % (360 / 20) + 1); 
-	food_spawn.y = 20 * (rand() % (360 / 20) + 1); 
-	if(food_spawn.x == SCREEN_WIDTH / 2 && food_spawn.y == SCREEN_HEIGHT / 2)
+
+	food_spawn.x = 20 * (rand() % (360 / 20) + 1);
+	food_spawn.y = 20 * (rand() % (360 / 20) + 1);
+	if (food_spawn.x == SCREEN_WIDTH / 2 && food_spawn.y == SCREEN_HEIGHT / 2)
 	{
 		food_spawn.x += 20;
 	}
 
 	food_spawn.direction = rand() % 4 + 1;
 	food_spawn.score = 0;
-	food_spawn.spawned = true; 
-	
+	food_spawn.spawned = true;
+
 	return food_spawn;
 }
 
@@ -68,40 +68,39 @@ void runGame(snake head, food food_spawn)
 {
 	float timer = 0.0f, limit = 0.15f;
 	bool pause = false, game_over = false;
-	int direction = 0; 
+	int direction = 0;
 
-	while(!WindowShouldClose())
+	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 
-			ClearBackground(THE_VOID);
+		ClearBackground(THE_VOID);
 
-			drawGrid();
-			drawBorders();
-			drawScore(food_spawn.score);
-			drawSnake(head);
-			food_spawn = drawFood(food_spawn); 
-			food_spawn = devourFood(head, food_spawn);
-			pause = pauseGame(pause);
+		drawGrid();
+		drawBorders();
+		drawScore(food_spawn.score);
+		drawSnake(head);
+		food_spawn = drawFood(food_spawn);
+		food_spawn = devourFood(head, food_spawn);
+		pause = pauseGame(pause);
 
-			if(borderCollision(head) || bodyCollision(head))
-			{	
-				game_over = gameOver(); 
-			}
+		if (borderCollision(head) || bodyCollision(head))
+		{
+			game_over = gameOver();
+		}
 
-			if(timer >= limit && !pause && !game_over)
-			{
-				direction = snakeDirection(direction, pause);
-				moveSnake(head, direction);
-				timer = 0.0f;
-			}
-			else
-			{
-				timer += GetFrameTime();
-			}
+		if (timer >= limit && !pause && !game_over)
+		{
+			direction = snakeDirection(direction, pause);
+			moveSnake(head, direction);
+			timer = 0.0f;
+		}
+		else
+		{
+			timer += GetFrameTime();
+		}
 
 		EndDrawing();
-
 	}
 
 	free(head);
@@ -109,24 +108,24 @@ void runGame(snake head, food food_spawn)
 
 int snakeDirection(int direction, bool pause)
 {
-	if(!pause)
+	if (!pause)
 	{
-		if(IsKeyDown(KEY_W) && direction != KEY_S)
+		if (IsKeyDown(KEY_W) && direction != KEY_S)
 		{
 			direction = KEY_W;
 		}
-		
-		if(IsKeyDown(KEY_A) && direction != KEY_D)
+
+		if (IsKeyDown(KEY_A) && direction != KEY_D)
 		{
 			direction = KEY_A;
 		}
-		
-		if(IsKeyDown(KEY_S) && direction != KEY_W)
+
+		if (IsKeyDown(KEY_S) && direction != KEY_W)
 		{
 			direction = KEY_S;
 		}
-		
-		if(IsKeyDown(KEY_D) && direction != KEY_A)
+
+		if (IsKeyDown(KEY_D) && direction != KEY_A)
 		{
 			direction = KEY_D;
 		}
@@ -138,7 +137,7 @@ int snakeDirection(int direction, bool pause)
 void moveSnake(snake head, int direction)
 {
 	const int speed = 20;
-	
+
 	snake body = head;
 	body = body->next;
 
@@ -147,21 +146,21 @@ void moveSnake(snake head, int direction)
 
 	switch (direction)
 	{
-		case KEY_W:
-			head->y -= speed;
-			break;
-		case KEY_A:
-			head->x -= speed;
-			break;
-		case KEY_S:
-			head->y += speed;
-			break;	
-		case KEY_D:
-			head->x += speed;
-			break;
+	case KEY_W:
+		head->y -= speed;
+		break;
+	case KEY_A:
+		head->x -= speed;
+		break;
+	case KEY_S:
+		head->y += speed;
+		break;
+	case KEY_D:
+		head->x += speed;
+		break;
 	}
-	
-	while(body != NULL)
+
+	while (body != NULL)
 	{
 		temp_x = body->x, temp_y = body->y;
 
@@ -171,65 +170,64 @@ void moveSnake(snake head, int direction)
 		old_x = temp_x, old_y = temp_y;
 		body = body->next;
 	}
-
 }
 
 void drawSnake(snake head)
 {
-	while(head != NULL)
+	while (head != NULL)
 	{
-		DrawRectangle(head->x,   head->y, 
-					  WIDTH,     HEIGHT, SNAKE_PURPLE);
-								
+		DrawRectangle(head->x, head->y,
+					  WIDTH, HEIGHT, SNAKE_PURPLE);
+
 		head = head->next;
 	}
 }
 
 food drawFood(food food_spawn)
 {
-	if(!food_spawn.spawned)
+	if (!food_spawn.spawned)
 	{
-		food_spawn.x = 20 * (rand() % (360 / 20) + 1); 
-		food_spawn.y = 20 * (rand() % (360 / 20) + 1); 
-		food_spawn.spawned = true; 
+		food_spawn.x = 20 * (rand() % (360 / 20) + 1);
+		food_spawn.y = 20 * (rand() % (360 / 20) + 1);
+		food_spawn.spawned = true;
 	}
 
-	DrawRectangle(food_spawn.x, food_spawn.y, 
-				  WIDTH, 		HEIGHT, FOOD_GREEN);
+	DrawRectangle(food_spawn.x, food_spawn.y,
+				  WIDTH, HEIGHT, FOOD_GREEN);
 
-	return food_spawn; 
+	return food_spawn;
 }
 
 food devourFood(snake head, food food_spawn)
 {
-	if(head->x == food_spawn.x && head->y == food_spawn.y)
+	if (head->x == food_spawn.x && head->y == food_spawn.y)
 	{
 		return addSnakeParts(&head, food_spawn);
 	}
 
-	return food_spawn; 
+	return food_spawn;
 }
 
-food addSnakeParts(snake* head, food good_food)
-{ 
+food addSnakeParts(snake *head, food good_food)
+{
 	snake new_node = malloc(sizeof(struct snake));
-	if(new_node == NULL)
+	if (new_node == NULL)
 	{
 		exit(EXIT_FAILURE);
 	}
-	
+
 	new_node->next = NULL;
 	new_node->x = -20, new_node->y = -20;
 
 	snake current_node = *head;
-	while(current_node->next != NULL)
+	while (current_node->next != NULL)
 	{
 		current_node = current_node->next;
-	}	
-	
+	}
+
 	current_node->next = new_node;
 
-	good_food.spawned = false; 
+	good_food.spawned = false;
 	++good_food.score;
 
 	return good_food;
@@ -237,17 +235,17 @@ food addSnakeParts(snake* head, food good_food)
 
 void drawGrid(void)
 {
-	for(int y = 0; y <= SCREEN_HEIGHT; y += HEIGHT)
+	for (int y = 0; y <= SCREEN_HEIGHT; y += HEIGHT)
 	{
-		for(int x = 0; x <= SCREEN_WIDTH; x += WIDTH)
+		for (int x = 0; x <= SCREEN_WIDTH; x += WIDTH)
 		{
-			DrawRectangleLines(x, 	  y, 
+			DrawRectangleLines(x, y,
 							   WIDTH, HEIGHT, GRID_GRAY);
 		}
 	}
 }
 
-void drawBorders(void) 
+void drawBorders(void)
 {
 	DrawRectangle(0, 0, 20, SCREEN_HEIGHT, BORDER_GRAY);
 	DrawRectangle(0, 0, SCREEN_WIDTH, 20, BORDER_GRAY);
@@ -257,51 +255,51 @@ void drawBorders(void)
 
 void drawScore(int score)
 {
-	const char* MESSAGE = "Score: %d";
-	DrawText(TextFormat(MESSAGE, score), 
-			 SCORE_X , SCORE_Y, FONT_SIZE, TEXT_YELLOW);
+	const char *MESSAGE = "Score: %d";
+	DrawText(TextFormat(MESSAGE, score),
+			 SCORE_X, SCORE_Y, FONT_SIZE, TEXT_YELLOW);
 }
 
 bool borderCollision(snake head)
 {
-	bool isColliding = false; 
+	bool isColliding = false;
 
-	if(head->x < LEFT_BORDER)
-	{
-		isColliding = true; 
-	}
-
-	if(head->x > RIGHT_BORDER)
+	if (head->x < LEFT_BORDER)
 	{
 		isColliding = true;
 	}
 
-	if(head->y < TOP_BORDER)
-	{
-		isColliding = true; 
-	}
-
-	if(head->y > BOTTOM_BORDER)
+	if (head->x > RIGHT_BORDER)
 	{
 		isColliding = true;
 	}
 
-	return isColliding; 
+	if (head->y < TOP_BORDER)
+	{
+		isColliding = true;
+	}
+
+	if (head->y > BOTTOM_BORDER)
+	{
+		isColliding = true;
+	}
+
+	return isColliding;
 }
 
 bool bodyCollision(snake head)
 {
-	bool isColliding = false; 
+	bool isColliding = false;
 
-	snake body = head; 
-	body = body->next; 
-	
-	while(body != NULL)
+	snake body = head;
+	body = body->next;
+
+	while (body != NULL)
 	{
-		if(head->x == body->x && head->y == body->y)
+		if (head->x == body->x && head->y == body->y)
 		{
-			isColliding = true; 
-			break; 
+			isColliding = true;
+			break;
 		}
 		body = body->next;
 	}
@@ -311,33 +309,33 @@ bool bodyCollision(snake head)
 
 bool gameOver(void)
 {
-	const char* MESSAGE = "Game over!";
+	const char *MESSAGE = "Game over!";
 
-	DrawText(MESSAGE, 
-			 GAME_OVER_X, GAME_OVER_Y, 
-			 FONT_SIZE,   TEXT_YELLOW);
-	
-	return true; 
+	DrawText(MESSAGE,
+			 GAME_OVER_X, GAME_OVER_Y,
+			 FONT_SIZE, TEXT_YELLOW);
+
+	return true;
 }
 
 bool pauseGame(bool pause)
 {
-	const char* MESSAGE = "Game is paused!";
+	const char *MESSAGE = "Game is paused!";
 
-	if(IsKeyPressed(KEY_P) && !pause)
+	if (IsKeyPressed(KEY_P) && !pause)
 	{
-		pause = true; 
+		pause = true;
 	}
-	else if(IsKeyPressed(KEY_P) && pause)
+	else if (IsKeyPressed(KEY_P) && pause)
 	{
-		pause = false; 
+		pause = false;
 	}
-	else if(pause)
-	{	
-		DrawText(MESSAGE, 
-				 PAUSE_X, 	PAUSE_Y, 
+	else if (pause)
+	{
+		DrawText(MESSAGE,
+				 PAUSE_X, PAUSE_Y,
 				 FONT_SIZE, TEXT_YELLOW);
 	}
-	
+
 	return pause;
 }
