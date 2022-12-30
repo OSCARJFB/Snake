@@ -84,7 +84,6 @@ void boardSetup(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 
 void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 {
-	bool timer_started = false;
 	char byte, direction; 
 
 	while(byte != ESCAPE_KEY)
@@ -99,9 +98,11 @@ void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 int _kbhit()
 {
 	char byte = ' ';
-	read(STDIN_FILENO, &byte, ONE_BYTE);
+	int result; 
 
-	return byte; 
+	result = read(STDIN_FILENO, &byte, ONE_BYTE);
+
+	return byte = result == SUCCESS ? byte : FAIL; 
 }
 
 int translateByte(char byte, char direction)
@@ -157,10 +158,9 @@ int rawSetup()
 		return FAIL; 
 	}
 
-	raw_terminal.c_lflag &= ~ICANON; 
-	raw_terminal.c_lflag &= ~ECHO; 
+	raw_terminal.c_lflag &= ~(ICANON | ECHO); 
 	raw_terminal.c_cc[VMIN] = 0;
-  	raw_terminal.c_cc[VTIME] = 2;
+  	raw_terminal.c_cc[VTIME] = 1;
 
 	result = tcsetattr(STDIN_FILENO, TCSANOW, &raw_terminal);
 	if(result == FAIL)
@@ -200,7 +200,7 @@ void renderBoard(char gameBoard[grid_len][grid_wid])
 	}
 }
 
-void moveSnake(snake head, char input, char gameBoard[grid_len][grid_wid])
+void moveSnake(snake head, char direction, char gameBoard[grid_len][grid_wid])
 {
 	snake body = head;
 	body = body->next; 
@@ -210,7 +210,7 @@ void moveSnake(snake head, char input, char gameBoard[grid_len][grid_wid])
 	
 	gameBoard[old_y][old_X] = ' ';
 
-	switch (input)
+	switch (direction)
 	{
 		case 'w':
 			head->y -= 1;
