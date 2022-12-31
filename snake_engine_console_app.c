@@ -10,7 +10,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <termios.h>
-#include <sys/select.h>
 #include "snake_structures.h"
 #include "snake_prototypes_console.h"
 #include "snake_enumerations.h"
@@ -88,6 +87,7 @@ void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 
 	while (byte != ESCAPE_KEY)
 	{
+		refreshRate();
 		byte = _kbhit();
 		direction = translateByte(byte, direction);
 		renderBoard(gameBoard);
@@ -95,13 +95,26 @@ void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 	}
 }
 
-int _kbhit()
+void refreshRate(void)
+{
+	int result;
+	struct timespec timer;
+	timer.tv_sec = 0;
+	timer.tv_nsec = 100000000;
+
+	result = nanosleep(&timer, NULL);
+	if (result == FAIL)
+	{
+		/* Handle error. */
+	}
+}
+
+int _kbhit(void)
 {
 	char byte = ' ';
 	int result;
 
 	result = read(STDIN_FILENO, &byte, ONE_BYTE);
-
 	return byte = result == SUCCESS ? byte : FAIL;
 }
 
