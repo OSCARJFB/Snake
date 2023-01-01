@@ -49,9 +49,10 @@ food foodSetUp()
 {
 	srand(time(NULL));
 	food food_spawn;
-	food_spawn.x = rand() % grid_len;
-	food_spawn.y = rand() % grid_len;
-	food_spawn.score = 0; 
+	food_spawn.x = rand() % grid_wid - 1;
+	food_spawn.y = rand() % grid_len - 1;
+	food_spawn.score = 0;
+	food_spawn.spawned = true;
 	if (food_spawn.x == snake_spawn && food_spawn.y == snake_spawn)
 	{
 		++food_spawn.x;
@@ -93,6 +94,8 @@ void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 		direction = translateByte(byte, direction);
 		renderBoard(gameBoard, food_spawn.score);
 		moveSnake(head, direction, gameBoard);
+		food_spawn = devourFood(food_spawn, head);
+		food_spawn = spawnFood(food_spawn, gameBoard);
 	}
 }
 
@@ -212,7 +215,7 @@ void renderBoard(char gameBoard[grid_len][grid_wid], int score)
 			}
 		}
 		printf("\n");
-	} 
+	}
 }
 
 void moveSnake(snake head, char direction, char gameBoard[grid_len][grid_wid])
@@ -257,3 +260,26 @@ void moveSnake(snake head, char direction, char gameBoard[grid_len][grid_wid])
 	}
 }
 
+food devourFood(food food_spawn, snake head)
+{
+	if (head->x == food_spawn.x && head->y == food_spawn.y)
+	{
+		++food_spawn.score;
+		food_spawn.spawned = false;
+	}
+
+	return food_spawn;
+}
+
+food spawnFood(food food_spawn, char gameBoard[grid_len][grid_wid])
+{
+	if (food_spawn.spawned == false)
+	{
+		food_spawn.x = rand() % grid_wid - 1;
+		food_spawn.y = rand() % grid_len - 1;
+		gameBoard[food_spawn.y][food_spawn.x] = 'X';
+		food_spawn.spawned = true;
+	}
+
+	return food_spawn;
+}
