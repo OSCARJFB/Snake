@@ -51,6 +51,7 @@ food foodSetUp()
 	food food_spawn;
 	food_spawn.x = rand() % grid_len;
 	food_spawn.y = rand() % grid_len;
+	food_spawn.score = 0; 
 	if (food_spawn.x == snake_spawn && food_spawn.y == snake_spawn)
 	{
 		++food_spawn.x;
@@ -90,7 +91,7 @@ void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 		refreshRate();
 		byte = _kbhit();
 		direction = translateByte(byte, direction);
-		renderBoard(gameBoard);
+		renderBoard(gameBoard, food_spawn.score);
 		moveSnake(head, direction, gameBoard);
 	}
 }
@@ -189,9 +190,10 @@ void rawDisable()
 	tcsetattr(STDIN_FILENO, TCSANOW, &reset_terminal);
 }
 
-void renderBoard(char gameBoard[grid_len][grid_wid])
+void renderBoard(char gameBoard[grid_len][grid_wid], int score)
 {
 	system("clear");
+	printf("Score: %d\n", score);
 	for (int y = 0; y < grid_len; ++y)
 	{
 		for (int x = 0; x < grid_wid; ++x)
@@ -210,7 +212,7 @@ void renderBoard(char gameBoard[grid_len][grid_wid])
 			}
 		}
 		printf("\n");
-	}
+	} 
 }
 
 void moveSnake(snake head, char direction, char gameBoard[grid_len][grid_wid])
@@ -254,3 +256,4 @@ void moveSnake(snake head, char direction, char gameBoard[grid_len][grid_wid])
 		body = body->next;
 	}
 }
+
