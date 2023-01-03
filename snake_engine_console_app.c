@@ -25,7 +25,7 @@ int main(void)
 		return EXIT_FAILURE;
 	}
 
-	char gameBoard[grid_len][grid_wid];
+	char gameBoard[grid_height][grid_width];
 
 	snake head = snakeSetup();
 	food food_spawn = foodSetUp();
@@ -49,8 +49,8 @@ food foodSetUp()
 {
 	srand(time(NULL));
 	food food_spawn;
-	food_spawn.x = rand() % (grid_wid - 1) + 1;
-	food_spawn.y = rand() % (grid_len - 1) + 1;
+	food_spawn.x = rand() % (grid_width - 1) + 1;
+	food_spawn.y = rand() % (grid_height - 1) + 1;
 	food_spawn.score = 0;
 	food_spawn.spawned = true;
 	if (food_spawn.x == snake_spawn && food_spawn.y == snake_spawn)
@@ -61,11 +61,11 @@ food foodSetUp()
 	return food_spawn;
 }
 
-void boardSetup(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
+void boardSetup(snake head, food food_spawn, char gameBoard[grid_height][grid_width])
 {
-	for (int y = 0; y < grid_len; ++y)
+	for (int y = 0; y < grid_height; ++y)
 	{
-		for (int x = 0; x < grid_wid; ++x)
+		for (int x = 0; x < grid_width; ++x)
 		{
 			if (head->x == x && head->y == y)
 			{
@@ -83,7 +83,7 @@ void boardSetup(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 	}
 }
 
-void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
+void runGame(snake head, food food_spawn, char gameBoard[grid_height][grid_width])
 {
 	char byte, direction;
 
@@ -97,6 +97,12 @@ void runGame(snake head, food food_spawn, char gameBoard[grid_len][grid_wid])
 		food_spawn = devourFood(food_spawn, head);
 		addSnakeParts(&head, food_spawn.spawned);
 		food_spawn = spawnFood(food_spawn, gameBoard);
+		if(borderCollision(head) || snakecollision(head))
+		{
+			printf("\nS C O R E :  %d\n", food_spawn.score);
+			printf("\nG A M E  O V E R !\n\n");
+			break; 
+		}
 	}
 }
 
@@ -194,15 +200,15 @@ void rawDisable()
 	tcsetattr(STDIN_FILENO, TCSANOW, &reset_terminal);
 }
 
-void renderBoard(char gameBoard[grid_len][grid_wid], int score)
+void renderBoard(char gameBoard[grid_height][grid_width], int score)
 {
 	system("clear");
 	printf("Score: %d\n", score);
-	for (int y = 0; y < grid_len; ++y)
+	for (int y = 0; y < grid_height; ++y)
 	{
-		for (int x = 0; x < grid_wid; ++x)
+		for (int x = 0; x < grid_width; ++x)
 		{
-			if (y == 0 || y == grid_len - 1 || x == 0 || x == grid_wid - 1)
+			if (y == 0 || y == grid_height - 1 || x == 0 || x == grid_width - 1)
 			{
 				printf("#");
 			}
@@ -215,7 +221,7 @@ void renderBoard(char gameBoard[grid_len][grid_wid], int score)
 	}
 }
 
-void moveSnake(snake head, char direction, char gameBoard[grid_len][grid_wid])
+void moveSnake(snake head, char direction, char gameBoard[grid_height][grid_width])
 {
 	snake body = head;
 	body = body->next;
@@ -268,12 +274,12 @@ food devourFood(food food_spawn, snake head)
 	return food_spawn;
 }
 
-food spawnFood(food food_spawn, char gameBoard[grid_len][grid_wid])
+food spawnFood(food food_spawn, char gameBoard[grid_height][grid_width])
 {
 	if (food_spawn.spawned == false)
 	{
-		food_spawn.x = rand() % (grid_wid - 1) + 1;
-		food_spawn.y = rand() % (grid_len - 1) + 1;
+		food_spawn.x = rand() % (grid_width - 1) + 1;
+		food_spawn.y = rand() % (grid_height - 1) + 1;
 		gameBoard[food_spawn.y][food_spawn.x] = 'X';
 		food_spawn.spawned = true;
 	}
@@ -305,3 +311,38 @@ void addSnakeParts(snake *head, bool food_is_spawned)
 	current_node->next = new_node;
 }
 
+bool snakecollision(snake head)
+{
+	bool colliding = false;
+	int x = head->x, y = head->y;
+	
+	head = head->next;
+
+	while (head != NULL)
+	{
+		if (head->x == x && head->y == y)
+		{
+			colliding = true;
+			break;
+		}
+		head = head->next;
+	}
+
+	return colliding;
+}
+
+bool borderCollision(snake head)
+{
+	bool colliding = false;
+	if (head->x == grid_width - grid_width || head->x == grid_width)
+	{
+		colliding = true;
+	}
+
+	if(head->y == grid_height - grid_height || head->y == grid_height)
+	{
+		colliding = true;
+	}
+
+	return colliding; 
+}

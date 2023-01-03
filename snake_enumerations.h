@@ -57,8 +57,8 @@ enum snakeRaylibEnums
 
 enum snakeConsoleEnums
 {
-    grid_len = 12,
-    grid_wid = 22,
+    grid_width = 22,
+    grid_height = 12,
     snake_spawn = 6,
     ESCAPE_KEY = 27,
 };
