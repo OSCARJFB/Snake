@@ -28,9 +28,7 @@ struct food
 	bool spawned;
 };
 
-/// @brief This structure holds the coordinates of food,
-/// @brief how much food that has been devoured(score)
-/// @brief and also if food is spawned or not.
+/// @brief This structure holds the coordinates of food, how much food that has been devoured(score) and also if food is spawned or not.
 typedef struct food food;
 
 #endif // SNAKE_STRUCTURE_H

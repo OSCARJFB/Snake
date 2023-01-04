@@ -38,8 +38,8 @@ int main(void)
 snake snakeSetup()
 {
 	snake head = malloc(sizeof(snake));
-	head->x = snake_spawn;
-	head->y = snake_spawn;
+	head->x = snake_spawn_x;
+	head->y = snake_spawn_y;
 	head->next = NULL;
 
 	return head;
@@ -53,7 +53,7 @@ food foodSetUp()
 	food_spawn.y = rand() % (grid_height - 1) + 1;
 	food_spawn.score = 0;
 	food_spawn.spawned = true;
-	if (food_spawn.x == snake_spawn && food_spawn.y == snake_spawn)
+	if (food_spawn.x == snake_spawn_x && food_spawn.y == snake_spawn_y)
 	{
 		++food_spawn.x;
 	}
@@ -116,7 +116,8 @@ void refreshRate(void)
 	result = nanosleep(&timer, NULL);
 	if (result == FAIL)
 	{
-		/* Handle error. */
+		/* Handle error, no solution might be needed. */
+		return; 
 	}
 }
 

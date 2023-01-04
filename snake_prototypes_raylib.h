@@ -7,23 +7,21 @@
 #define SNAKE_PROTOTYPES_RAYLIB_H
 #include "snake_structures.h"
 
-/// @brief Initiate game settings. Create a window, set size the size of that window,
-/// @brief target fps and do seed for random value generation.
+/// @brief Initiate game settings. Create a window, sets size the size of that window, target fps and do seed for random value generation.
 /// @param void
 void gameSetup(void);
 
-/// @brief Initiate start location of the snake.
+/// @brief Initiates the start location of the snake.
 /// @param void
 /// @return the allocated head of a linked list.
 struct snake *snakeSetup(void);
 
-/// @brief Initiate start location of good food.
+/// @brief Initiates the start location of good food.
 /// @param void
 /// @return A structure.
 struct food foodSetup(void);
 
-/// @brief Excute the game loop and run until end of the game.
-/// @brief This functions calls most of the other logic in this game.
+/// @brief Will excute a game loop, it will run until end of the game. This functions calls most of the other logic in this game.
 /// @param struct*
 /// @param struct
 void runGame(struct snake *, struct food);
@@ -54,10 +52,10 @@ struct food drawFood(struct food);
 /// @return A struct used for food logic.
 struct food devourFood(struct snake *, struct food);
 
-/// @brief Add a new node to the linked list, this will be done to grow the snake.
+/// @brief Add a new node to the linked list, this is done in order to grow the snake.
 /// @param struct**
 /// @param struct
-/// @return A struct used for food logic.
+/// @return A struct used by the food logic.
 struct food addSnakeParts(struct snake **, struct food);
 
 /// @brief Draw a grid covering the background of the screen.
