@@ -116,6 +116,9 @@ void runGame(snake *head, food food_spawn, char gameBoard[grid_height][grid_widt
 			break; 
 		}
 	}
+
+	free(head);
+	head = NULL; 
 }
 
 void refreshRate(void)

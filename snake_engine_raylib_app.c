@@ -110,6 +110,7 @@ void runGame(snake *head, food food_spawn)
 	}
 
 	free(head);
+	head = NULL; 
 }
 
 int snakeDirection(int direction, bool pause)
