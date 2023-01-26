@@ -27,7 +27,7 @@ int main(void)
 
 	char gameBoard[grid_height][grid_width];
 
-	snake head = snakeSetup();
+	snake *head = snakeSetup();
 	food food_spawn = foodSetUp();
 	boardSetup(head, food_spawn, gameBoard);
 	runGame(head, food_spawn, gameBoard);
@@ -35,9 +35,9 @@ int main(void)
 	return EXIT_SUCCESS;
 }
 
-snake snakeSetup()
+snake *snakeSetup(void)
 {
-	snake head = malloc(sizeof(snake));
+	snake *head = malloc(sizeof(snake));
 	head->x = snake_spawn_x;
 	head->y = snake_spawn_y;
 	head->next = NULL;
@@ -45,7 +45,7 @@ snake snakeSetup()
 	return head;
 }
 
-food foodSetUp()
+food foodSetUp(void)
 {
 	srand(time(NULL));
 	food food_spawn;
@@ -61,8 +61,14 @@ food foodSetUp()
 	return food_spawn;
 }
 
-void boardSetup(snake head, food food_spawn, char gameBoard[grid_height][grid_width])
+void boardSetup(snake *head, food food_spawn, char gameBoard[grid_height][grid_width])
 {
+	if(head == NULL)
+	{
+		printf("boardSetup: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	for (int y = 0; y < grid_height; ++y)
 	{
 		for (int x = 0; x < grid_width; ++x)
@@ -83,8 +89,14 @@ void boardSetup(snake head, food food_spawn, char gameBoard[grid_height][grid_wi
 	}
 }
 
-void runGame(snake head, food food_spawn, char gameBoard[grid_height][grid_width])
+void runGame(snake *head, food food_spawn, char gameBoard[grid_height][grid_width])
 {
+	if(head == NULL)
+	{
+		printf("runGame: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	char byte, direction;
 
 	while (byte != ESCAPE_KEY)
@@ -108,7 +120,7 @@ void runGame(snake head, food food_spawn, char gameBoard[grid_height][grid_width
 
 void refreshRate(void)
 {
-	int result;
+	int result = 0;
 	struct timespec timer;
 	timer.tv_sec = 0;
 	timer.tv_nsec = 100000000;
@@ -116,7 +128,7 @@ void refreshRate(void)
 	result = nanosleep(&timer, NULL);
 	if (result == FAIL)
 	{
-		/* Handle error, no solution might be needed. */
+		/* Handle error, no solution currently, might be needed? */
 		return; 
 	}
 }
@@ -124,7 +136,7 @@ void refreshRate(void)
 int _kbhit(void)
 {
 	char byte = ' ';
-	int result;
+	int result = 0;
 
 	result = read(STDIN_FILENO, &byte, ONE_BYTE);
 	return byte = result == SUCCESS ? byte : FAIL;
@@ -222,9 +234,9 @@ void renderBoard(char gameBoard[grid_height][grid_width], int score)
 	}
 }
 
-void moveSnake(snake head, char direction, char gameBoard[grid_height][grid_width])
+void moveSnake(snake *head, char direction, char gameBoard[grid_height][grid_width])
 {
-	snake body = head;
+	snake *body = head;
 	body = body->next;
 
 	int temp_x, temp_y;
@@ -264,7 +276,7 @@ void moveSnake(snake head, char direction, char gameBoard[grid_height][grid_widt
 	}
 }
 
-food devourFood(food food_spawn, snake head)
+food devourFood(food food_spawn, snake *head)
 {
 	if (head->x == food_spawn.x && head->y == food_spawn.y)
 	{
@@ -288,22 +300,29 @@ food spawnFood(food food_spawn, char gameBoard[grid_height][grid_width])
 	return food_spawn;
 }
 
-void addSnakeParts(snake *head, bool food_is_spawned)
+void addSnakeParts(snake **head, bool food_is_spawned)
 {
+	if(head == NULL)
+	{
+		printf("addSnakeParts: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	if (food_is_spawned == true)
 	{
 		return;
 	}
 
-	snake new_node = malloc(sizeof(snake));
+	snake *new_node = malloc(sizeof(snake));
 	if (new_node == NULL)
 	{
+		printf("addSnakeParts: invalid nullptr error.");
 		exit(FAIL);
 	}
 
 	new_node->next = NULL;
 
-	snake current_node = *head;
+	snake *current_node = *head;
 	while (current_node->next != NULL)
 	{
 		current_node = current_node->next;
@@ -312,8 +331,14 @@ void addSnakeParts(snake *head, bool food_is_spawned)
 	current_node->next = new_node;
 }
 
-bool snakecollision(snake head)
+bool snakecollision(snake *head)
 {
+	if(head == NULL)
+	{
+		printf("snakecollision: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	bool colliding = false;
 	int x = head->x, y = head->y;
 	
@@ -332,9 +357,16 @@ bool snakecollision(snake head)
 	return colliding;
 }
 
-bool borderCollision(snake head)
+bool borderCollision(snake *head)
 {
+	if(head == NULL)
+	{
+		printf("borderCollision: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	bool colliding = false;
+
 	if (head->x == grid_width - grid_width || head->x == grid_width)
 	{
 		colliding = true;

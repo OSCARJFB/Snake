@@ -14,12 +14,12 @@ void gameSetup(void);
 /// @brief Initiates the start location of the snake.
 /// @param void
 /// @return the allocated head of a linked list.
-struct snake *snakeSetup(void);
+snake *snakeSetup(void);
 
 /// @brief Initiates the start location of good food.
 /// @param void
 /// @return A structure.
-struct food foodSetup(void);
+food foodSetup(void);
 
 /// @brief Will excute a game loop, it will run until end of the game. This functions calls most of the other logic in this game.
 /// @param struct*

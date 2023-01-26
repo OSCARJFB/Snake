@@ -15,7 +15,7 @@
 int main(void)
 {
 	gameSetup();
-	snake head = snakeSetup();
+	snake *head = snakeSetup();
 	food food_spawn = foodSetup();
 	runGame(head, food_spawn);
 
@@ -31,9 +31,9 @@ void gameSetup(void)
 	srand(time(NULL));
 }
 
-snake snakeSetup(void)
+snake *snakeSetup(void)
 {
-	snake head = malloc(sizeof(struct snake));
+	snake *head = malloc(sizeof(struct snake));
 	if (head == NULL)
 	{
 		exit(EXIT_FAILURE);
@@ -64,8 +64,14 @@ food foodSetup(void)
 	return food_spawn;
 }
 
-void runGame(snake head, food food_spawn)
+void runGame(snake *head, food food_spawn)
 {
+	if(head == NULL)
+	{
+		printf("runGame: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	float timer = 0.0f, limit = 0.15f;
 	bool pause = false, game_over = false;
 	int direction = 0;
@@ -134,11 +140,17 @@ int snakeDirection(int direction, bool pause)
 	return direction;
 }
 
-void moveSnake(snake head, int direction)
+void moveSnake(snake *head, int direction)
 {
+	if(head == NULL)
+	{
+		printf("moveSnake: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	const int speed = 20;
 
-	snake body = head;
+	snake *body = head;
 	body = body->next;
 
 	int temp_x = 0, temp_y = 0;
@@ -172,8 +184,14 @@ void moveSnake(snake head, int direction)
 	}
 }
 
-void drawSnake(snake head)
+void drawSnake(snake *head)
 {
+	if(head == NULL)
+	{
+		printf("drawSnake: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	while (head != NULL)
 	{
 		DrawRectangle(head->x, head->y,
@@ -198,8 +216,14 @@ food drawFood(food food_spawn)
 	return food_spawn;
 }
 
-food devourFood(snake head, food food_spawn)
+food devourFood(snake *head, food food_spawn)
 {
+	if(head == NULL)
+	{
+		printf("devourFood: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	if (head->x == food_spawn.x && head->y == food_spawn.y)
 	{
 		return addSnakeParts(&head, food_spawn);
@@ -208,9 +232,15 @@ food devourFood(snake head, food food_spawn)
 	return food_spawn;
 }
 
-food addSnakeParts(snake *head, food good_food)
+food addSnakeParts(snake **head, food good_food)
 {
-	snake new_node = malloc(sizeof(struct snake));
+	if(head == NULL)
+	{
+		printf("addSnakeParts: invalid nullptr error.");
+		exit(FAIL);
+	}
+
+	snake *new_node = malloc(sizeof(struct snake));
 	if (new_node == NULL)
 	{
 		exit(EXIT_FAILURE);
@@ -219,7 +249,7 @@ food addSnakeParts(snake *head, food good_food)
 	new_node->next = NULL;
 	new_node->x = -20, new_node->y = -20;
 
-	snake current_node = *head;
+	snake *current_node = *head;
 	while (current_node->next != NULL)
 	{
 		current_node = current_node->next;
@@ -260,7 +290,7 @@ void drawScore(int score)
 			 SCORE_X, SCORE_Y, FONT_SIZE, TEXT_YELLOW);
 }
 
-bool borderCollision(snake head)
+bool borderCollision(snake *head)
 {
 	bool isColliding = false;
 
@@ -287,11 +317,17 @@ bool borderCollision(snake head)
 	return isColliding;
 }
 
-bool bodyCollision(snake head)
-{
+bool bodyCollision(snake *head)
+{	
+	if(head == NULL)
+	{
+		printf("bodyCollision: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	bool isColliding = false;
 
-	snake body = head;
+	snake *body = head;
 	body = body->next;
 
 	while (body != NULL)
