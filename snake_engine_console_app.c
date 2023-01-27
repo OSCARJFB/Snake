@@ -27,6 +27,7 @@ int main(void)
 
 	char gameBoard[grid_height][grid_width];
 
+	srand(time(NULL));
 	snake *head = snakeSetup();
 	food food_spawn = foodSetUp();
 	boardSetup(head, food_spawn, gameBoard);
@@ -38,6 +39,12 @@ int main(void)
 snake *snakeSetup(void)
 {
 	snake *head = malloc(sizeof(snake));
+	if (head == NULL)
+	{
+		printf("snakeSetup: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	head->x = snake_spawn_x;
 	head->y = snake_spawn_y;
 	head->next = NULL;
@@ -47,12 +54,13 @@ snake *snakeSetup(void)
 
 food foodSetUp(void)
 {
-	srand(time(NULL));
 	food food_spawn;
+
 	food_spawn.x = rand() % (grid_width - 1) + 1;
 	food_spawn.y = rand() % (grid_height - 1) + 1;
 	food_spawn.score = 0;
 	food_spawn.spawned = true;
+
 	if (food_spawn.x == snake_spawn_x && food_spawn.y == snake_spawn_y)
 	{
 		++food_spawn.x;
@@ -63,7 +71,7 @@ food foodSetUp(void)
 
 void boardSetup(snake *head, food food_spawn, char gameBoard[grid_height][grid_width])
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("boardSetup: invalid nullptr error.");
 		exit(FAIL);
@@ -91,7 +99,7 @@ void boardSetup(snake *head, food food_spawn, char gameBoard[grid_height][grid_w
 
 void runGame(snake *head, food food_spawn, char gameBoard[grid_height][grid_width])
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("runGame: invalid nullptr error.");
 		exit(FAIL);
@@ -109,16 +117,16 @@ void runGame(snake *head, food food_spawn, char gameBoard[grid_height][grid_widt
 		food_spawn = devourFood(food_spawn, head);
 		addSnakeParts(&head, food_spawn.spawned);
 		food_spawn = spawnFood(food_spawn, gameBoard);
-		if(borderCollision(head) || snakecollision(head))
+		if (borderCollision(head) || snakecollision(head))
 		{
 			printf("\nS C O R E :  %d\n", food_spawn.score);
 			printf("\nG A M E  O V E R !\n\n");
-			break; 
+			break;
 		}
 	}
 
 	free(head);
-	head = NULL; 
+	head = NULL;
 }
 
 void refreshRate(void)
@@ -131,8 +139,8 @@ void refreshRate(void)
 	result = nanosleep(&timer, NULL);
 	if (result == FAIL)
 	{
-		/* Handle error, no solution currently, might be needed? */
-		return; 
+		printf("refreshRate: error.");
+		exit(FAIL);
 	}
 }
 
@@ -239,6 +247,12 @@ void renderBoard(char gameBoard[grid_height][grid_width], int score)
 
 void moveSnake(snake *head, char direction, char gameBoard[grid_height][grid_width])
 {
+	if (head == NULL)
+	{
+		printf("moveSnake: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	snake *body = head;
 	body = body->next;
 
@@ -281,6 +295,12 @@ void moveSnake(snake *head, char direction, char gameBoard[grid_height][grid_wid
 
 food devourFood(food food_spawn, snake *head)
 {
+	if (head == NULL)
+	{
+		printf("devourFood: invalid nullptr error.");
+		exit(FAIL);
+	}
+
 	if (head->x == food_spawn.x && head->y == food_spawn.y)
 	{
 		++food_spawn.score;
@@ -305,7 +325,7 @@ food spawnFood(food food_spawn, char gameBoard[grid_height][grid_width])
 
 void addSnakeParts(snake **head, bool food_is_spawned)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("addSnakeParts: invalid nullptr error.");
 		exit(FAIL);
@@ -336,7 +356,7 @@ void addSnakeParts(snake **head, bool food_is_spawned)
 
 bool snakecollision(snake *head)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("snakecollision: invalid nullptr error.");
 		exit(FAIL);
@@ -344,7 +364,7 @@ bool snakecollision(snake *head)
 
 	bool colliding = false;
 	int x = head->x, y = head->y;
-	
+
 	head = head->next;
 
 	while (head != NULL)
@@ -362,7 +382,7 @@ bool snakecollision(snake *head)
 
 bool borderCollision(snake *head)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("borderCollision: invalid nullptr error.");
 		exit(FAIL);
@@ -375,10 +395,10 @@ bool borderCollision(snake *head)
 		colliding = true;
 	}
 
-	if(head->y == grid_height - grid_height || head->y == grid_height)
+	if (head->y == grid_height - grid_height || head->y == grid_height)
 	{
 		colliding = true;
 	}
 
-	return colliding; 
+	return colliding;
 }

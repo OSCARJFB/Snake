@@ -27,15 +27,6 @@ enum snakeRaylibEnums
     /// @brief Border collision
     BOTTOM_BORDER = 360,
 
-    /// @brief Movement direction of food and enemy.
-    LEFT_UP = 1,
-    /// @brief Movement direction of food and enemy.
-    RIGHT_UP = 2,
-    /// @brief Movement direction of food and enemy.
-    LEFT_DOWN = 3,
-    /// @brief Movement direction of food and enemy.
-    RIGHT_DOWN = 4,
-
     /// @brief The size of all text in this game.
     FONT_SIZE = 20,
 
@@ -57,15 +48,20 @@ enum snakeRaylibEnums
 
 enum snakeConsoleEnums
 {
-    /// @brief Width of the game board in x-axis.  
+    /// @brief Width of the game board in x-axis.
     grid_width = 42,
-    /// @brief width of the game board in y-axis. 
+
+    /// @brief width of the game board in y-axis.
+
     grid_height = 24,
-    /// @brief Spawn x. 
+    /// @brief Spawn x.
+
     snake_spawn_x = 21,
-    /// @brief Spawn y. 
+    /// @brief Spawn y.
+
     snake_spawn_y = 12,
-    /// @brief Escape key. 
+    
+    /// @brief Escape key.
     ESCAPE_KEY = 27,
 };
 

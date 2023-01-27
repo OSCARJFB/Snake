@@ -8,7 +8,7 @@
 #include "snake_structures.h"
 #include "snake_enumerations.h"
 
-/// @brief Sets the terminal into raw mode. This is needed to be able to read a single key hit without and echo. 
+/// @brief Sets the terminal into raw mode. This is needed to be able to read a single key hit and prevent echo of characters. 
 /// @return a integer depending on success or failure. 
 int rawSetup(void);
 
@@ -16,13 +16,11 @@ int rawSetup(void);
 void rawDisable(void);
 
 /// @brief Initiates the start location of the snake.
-/// @param void
 /// @return the allocated head of a linked list.
 snake *snakeSetup(void);
 
 /// @brief Initiates the start location of good food.
-/// @param void
-/// @return A structure.
+/// @return A structure containing the data about food.
 food foodSetUp(void);
 
 /// @brief Initiates the all values in the array used to visualize the game.  
@@ -31,16 +29,16 @@ food foodSetUp(void);
 /// @param char[][]
 void boardSetup(snake *, food, char[grid_height][grid_width]);
 
-/// @brief Will excute a game loop, it will run until end of the game. This functions calls most of the other logic in this game.
+/// @brief Will excute the game loop, this loop will run until the end of the game. This functions controls and calls most of the other logic in this game.
 /// @param struct*
 /// @param struct
 void runGame(snake *, food, char[grid_height][grid_width]);
 
-/// @brief Works like set fps, determines how fast the game is rendered and input read. 
+/// @brief Determines how fast the game is rendered and the input is read. 
 void refreshRate(void);
 
 /// @brief Reads a byte representation of a key being hit or pressed.
-/// @return returns a integer dec value.  
+/// @return returns a integer value.  
 int _kbhit(void);
 
 /// @brief Translate the byte and set movement pattern of the snake. 
@@ -60,7 +58,7 @@ void renderBoard(char[grid_height][grid_width], int score);
 /// @param char[][]
 void moveSnake(snake *, char, char[grid_height][grid_width]);
 
-/// @brief Check if the snake has devoured the food.
+/// @brief Check if the snake has devoured any food.
 /// @param struct
 /// @param struct*
 /// @return A struct used by the food logic.
@@ -76,12 +74,12 @@ void addSnakeParts(snake **, bool);
 /// @param char[][]
 food spawnFood(food, char[grid_height][grid_width]);
 
-/// @brief A check to make sure the snake does not collide with itself. 
+/// @brief Controls if the snake has colided with itself.
 /// @param struct 
 /// @return A bool depending on collision status. 
 bool snakecollision(snake *); 
 
-/// @brief A check to make sure the snake does not collide with the boarders. 
+/// @brief Controls if the snake has colided with the wall at the edges of the screen.
 /// @param struct 
 /// @return A bool depending on collision status. 
 bool borderCollision(snake *); 

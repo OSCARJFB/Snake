@@ -6,8 +6,8 @@
 	https://github.com/OSCARJFB
 */
 
-/// @brief This linked list keeps track of the snakes body parts.
-/// @brief All nodes get a value dependent on how the head traverses the screen.
+/// @brief This linked list keeps track of the snake/snakes body parts.
+/// @brief All nodes get a value dependent on how the head traverses the screen/gameboard.
 typedef struct snake
 {
 	int x, y;

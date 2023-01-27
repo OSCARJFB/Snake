@@ -36,7 +36,8 @@ snake *snakeSetup(void)
 	snake *head = malloc(sizeof(struct snake));
 	if (head == NULL)
 	{
-		exit(EXIT_FAILURE);
+		printf("snakeSetup: invalid nullptr error.");
+		exit(FAIL);
 	}
 
 	head->next = NULL;
@@ -52,6 +53,7 @@ food foodSetup(void)
 
 	food_spawn.x = 20 * (rand() % (360 / 20) + 1);
 	food_spawn.y = 20 * (rand() % (360 / 20) + 1);
+
 	if (food_spawn.x == SCREEN_WIDTH / 2 && food_spawn.y == SCREEN_HEIGHT / 2)
 	{
 		food_spawn.x += 20;
@@ -66,7 +68,7 @@ food foodSetup(void)
 
 void runGame(snake *head, food food_spawn)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("runGame: invalid nullptr error.");
 		exit(FAIL);
@@ -88,8 +90,12 @@ void runGame(snake *head, food food_spawn)
 		drawSnake(head);
 		food_spawn = drawFood(food_spawn);
 		food_spawn = devourFood(head, food_spawn);
-		pause = pauseGame(pause);
-
+		
+		if(!game_over)
+		{
+			pause = pauseGame(pause);
+		}
+		
 		if (borderCollision(head) || bodyCollision(head))
 		{
 			game_over = gameOver();
@@ -110,7 +116,7 @@ void runGame(snake *head, food food_spawn)
 	}
 
 	free(head);
-	head = NULL; 
+	head = NULL;
 }
 
 int snakeDirection(int direction, bool pause)
@@ -143,7 +149,7 @@ int snakeDirection(int direction, bool pause)
 
 void moveSnake(snake *head, int direction)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("moveSnake: invalid nullptr error.");
 		exit(FAIL);
@@ -187,7 +193,7 @@ void moveSnake(snake *head, int direction)
 
 void drawSnake(snake *head)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("drawSnake: invalid nullptr error.");
 		exit(FAIL);
@@ -219,7 +225,7 @@ food drawFood(food food_spawn)
 
 food devourFood(snake *head, food food_spawn)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("devourFood: invalid nullptr error.");
 		exit(FAIL);
@@ -235,7 +241,7 @@ food devourFood(snake *head, food food_spawn)
 
 food addSnakeParts(snake **head, food good_food)
 {
-	if(head == NULL)
+	if (head == NULL)
 	{
 		printf("addSnakeParts: invalid nullptr error.");
 		exit(FAIL);
@@ -319,8 +325,8 @@ bool borderCollision(snake *head)
 }
 
 bool bodyCollision(snake *head)
-{	
-	if(head == NULL)
+{
+	if (head == NULL)
 	{
 		printf("bodyCollision: invalid nullptr error.");
 		exit(FAIL);
