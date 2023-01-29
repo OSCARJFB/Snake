@@ -3,9 +3,9 @@
 	https://github.com/OSCARJFB
 */
 
-#ifndef SNAKE_PROTOTYPES_RAYLIB_H
-#define SNAKE_PROTOTYPES_RAYLIB_H
-#include "snake_structures.h"
+#ifndef SNAKEPROTOTYPES_H
+#define SNAKEPROTOTYPES_H
+#include "snakeStructures.h"
 
 /// @brief Initiate the game settings. Create a window, set the size of that window, the target fps and do seed for random value generation.
 /// @param void
@@ -90,4 +90,4 @@ bool gameOver(void);
 /// @return A bool set to true or false depending on status of the bool parameter.
 bool pauseGame(bool pause);
 
-#endif // SNAKE_PROTOTYPES_RAYLIB_H
+#endif // SNAKEPROTOTYPES_H

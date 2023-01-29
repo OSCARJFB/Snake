@@ -1,4 +1,4 @@
-/*
+/*SUCCESS
 	Writen by: Oscar Bergström
 	https://github.com/OSCARJFB
 */
@@ -7,10 +7,10 @@
 #include <stdlib.h>
 #include <raylib.h>
 #include <time.h>
-#include "snake_structures.h"
-#include "snake_prototypes_raylib.h"
-#include "snake_enumerations.h"
-#include "snake_macros.h"
+#include "snakeStructures.h"
+#include "snakePrototypes.h"
+#include "snakeEnums.h"
+#include "snakeMacros.h"
 
 int main(void)
 {
@@ -37,7 +37,7 @@ snake *snakeSetup(void)
 	if (head == NULL)
 	{
 		printf("snakeSetup: invalid nullptr error.");
-		exit(FAIL);
+		exit(EXIT_FAILURE);
 	}
 
 	head->next = NULL;
@@ -68,12 +68,6 @@ food foodSetup(void)
 
 void runGame(snake *head, food food_spawn)
 {
-	if (head == NULL)
-	{
-		printf("runGame: invalid nullptr error.");
-		exit(FAIL);
-	}
-
 	float timer = 0.0f, limit = 0.15f;
 	bool pause = false, game_over = false;
 	int direction = 0;
@@ -149,12 +143,6 @@ int snakeDirection(int direction, bool pause)
 
 void moveSnake(snake *head, int direction)
 {
-	if (head == NULL)
-	{
-		printf("moveSnake: invalid nullptr error.");
-		exit(FAIL);
-	}
-
 	const int speed = 20;
 
 	snake *body = head;
@@ -193,12 +181,6 @@ void moveSnake(snake *head, int direction)
 
 void drawSnake(snake *head)
 {
-	if (head == NULL)
-	{
-		printf("drawSnake: invalid nullptr error.");
-		exit(FAIL);
-	}
-
 	while (head != NULL)
 	{
 		DrawRectangle(head->x, head->y,
@@ -225,12 +207,6 @@ food drawFood(food food_spawn)
 
 food devourFood(snake *head, food food_spawn)
 {
-	if (head == NULL)
-	{
-		printf("devourFood: invalid nullptr error.");
-		exit(FAIL);
-	}
-
 	if (head->x == food_spawn.x && head->y == food_spawn.y)
 	{
 		return addSnakeParts(&head, food_spawn);
@@ -241,12 +217,6 @@ food devourFood(snake *head, food food_spawn)
 
 food addSnakeParts(snake **head, food good_food)
 {
-	if (head == NULL)
-	{
-		printf("addSnakeParts: invalid nullptr error.");
-		exit(FAIL);
-	}
-
 	snake *new_node = malloc(sizeof(struct snake));
 	if (new_node == NULL)
 	{
@@ -290,10 +260,10 @@ void drawBorders(void)
 	DrawRectangle(0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, SCREEN_HEIGHT, BORDER_GRAY);
 }
 
-void drawScore(int score)
+void drawScore(int SCORE)
 {
 	const char *MESSAGE = "Score: %d";
-	DrawText(TextFormat(MESSAGE, score),
+	DrawText(TextFormat(MESSAGE, SCORE),
 			 SCORE_X, SCORE_Y, FONT_SIZE, TEXT_YELLOW);
 }
 
@@ -326,12 +296,6 @@ bool borderCollision(snake *head)
 
 bool bodyCollision(snake *head)
 {
-	if (head == NULL)
-	{
-		printf("bodyCollision: invalid nullptr error.");
-		exit(FAIL);
-	}
-
 	bool isColliding = false;
 
 	snake *body = head;
