@@ -69,10 +69,17 @@ food devourFood(food, snake *);
 /// @param struct
 void addSnakeParts(snake **, bool);
 
-/// @brief Spawns need food once devoured.
+/// @brief Spawns new food once devoured.
 /// @param struct
 /// @param char[][]
-food spawnFood(food, char[grid_height][grid_width]);
+/// @param struct* 
+food spawnFood(food, char[grid_height][grid_width], snake *);
+
+/// @brief If new food is about to spawn atop of the snake, give it a new position.
+/// @param int* 
+/// @param int*
+/// @param struct*
+void preventOverlapping(int *x, int *y, snake **head);
 
 /// @brief Controls if the snake has colided with itself.
 /// @param struct

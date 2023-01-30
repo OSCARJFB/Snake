@@ -56,8 +56,8 @@ food foodSetUp(void)
 {
 	food food_spawn;
 
-	food_spawn.x = rand() % (grid_width - 1) + 1;
-	food_spawn.y = rand() % (grid_height - 1) + 1;
+	food_spawn.x = rand() % (grid_width - 2) + 1;
+	food_spawn.y = rand() % (grid_height - 2) + 1;
 	food_spawn.score = 0;
 	food_spawn.spawned = true;
 
@@ -103,8 +103,9 @@ void runGame(snake *head, food food_spawn, char gameBoard[grid_height][grid_widt
 		renderBoard(gameBoard, food_spawn.score);
 		moveSnake(head, direction, gameBoard);
 		food_spawn = devourFood(food_spawn, head);
+		printf("y: %d x: %d\n", food_spawn.y, food_spawn.x);
 		addSnakeParts(&head, food_spawn.spawned);
-		food_spawn = spawnFood(food_spawn, gameBoard);
+		food_spawn = spawnFood(food_spawn, gameBoard, head);
 		if (borderCollision(head) || snakecollision(head))
 		{
 			printf("\nS C O R E :  %d\n", food_spawn.score);
@@ -122,7 +123,7 @@ void refreshRate(void)
 	int result = 0;
 	struct timespec timer;
 	timer.tv_sec = 0;
-	timer.tv_nsec = 100000000;
+	timer.tv_nsec = SECOND / 6;
 
 	result = nanosleep(&timer, NULL);
 	if (result == FAIL)
@@ -286,17 +287,51 @@ food devourFood(food food_spawn, snake *head)
 	return food_spawn;
 }
 
-food spawnFood(food food_spawn, char gameBoard[grid_height][grid_width])
+food spawnFood(food food_spawn, char gameBoard[grid_height][grid_width], snake *head)
 {
 	if (food_spawn.spawned == false)
 	{
-		food_spawn.x = rand() % (grid_width - 1) + 1;
-		food_spawn.y = rand() % (grid_height - 1) + 1;
+		food_spawn.x = rand() % (grid_width - 2) + 1;
+		food_spawn.y = rand() % (grid_height - 2) + 1;
 		gameBoard[food_spawn.y][food_spawn.x] = 'X';
 		food_spawn.spawned = true;
+
+		preventOverlapping(&food_spawn.x, &food_spawn.y, &head);
 	}
 
 	return food_spawn;
+}
+
+void preventOverlapping(int *x, int *y, snake **head)
+{	
+	int n_x = 1, n_y = 1; 
+	bool overlapping = false; 
+	snake *check_head = *head; 
+	while(check_head != NULL)
+	{
+		if(check_head->x == *x && check_head->y == *y)
+		{
+			*y = n_y; 
+			check_head = *head; 
+
+			/* New row */
+			if(n_x == grid_width - 2 && n_y != grid_height - 2)
+			{
+				++n_y;
+				n_x = 0;
+			}
+
+			*x = n_x++;
+
+			/* DEBUG LOGGING */
+			FILE *f;
+			f = fopen("x.log", "a+");
+			fprintf(f, "Overlapping, so setting new values x/y to, x:%d y:%d\n", *x, *y); 
+			fclose(f);
+		} 
+
+		check_head = check_head->next; 
+	}
 }
 
 void addSnakeParts(snake **head, bool food_is_spawned)
@@ -348,12 +383,12 @@ bool borderCollision(snake *head)
 {
 	bool colliding = false;
 
-	if (head->x == grid_width - grid_width || head->x == grid_width)
+	if (head->x <= grid_width - grid_width || head->x >= grid_width - 1)
 	{
 		colliding = true;
 	}
 
-	if (head->y == grid_height - grid_height || head->y == grid_height)
+	if (head->y <= grid_height - grid_height || head->y >= grid_height - 1)
 	{
 		colliding = true;
 	}
