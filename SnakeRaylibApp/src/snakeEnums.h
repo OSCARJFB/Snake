@@ -6,18 +6,24 @@
 #ifndef SNAKEENUMS_H
 #define SNAKEENUMS_H
 
-enum snakeRaylibEnums
+enum gridSize
 {
     /// @brief Grid height.
     HEIGHT = 20,
     /// @brief Grid width.
     WIDTH = 20,
+};
 
+enum screenSize
+{
     /// @brief The actual width of the screen.
     SCREEN_WIDTH = 400,
     /// @brief The actual height of the screen.
     SCREEN_HEIGHT = 400,
+};
 
+enum borderLocation
+{
     /// @brief Border collision
     LEFT_BORDER = 20,
     /// @brief Border collision
@@ -26,7 +32,10 @@ enum snakeRaylibEnums
     TOP_BORDER = 20,
     /// @brief Border collision
     BOTTOM_BORDER = 360,
+};
 
+enum textProperties
+{
     /// @brief The size of all text in this game.
     FONT_SIZE = 20,
 

@@ -9,7 +9,7 @@ release: snakeEngine.c
 
 # Compiles with debug flag.
 debug: snakeEngine.c
-	gcc snakeEngine.c -g -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o debug
+	gcc snakeEngine.c -DDEBUG -g -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o debug
 
 # Remove all object files.
 clean: 

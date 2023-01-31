@@ -12,20 +12,24 @@
 #include <termios.h>
 #include "snakeStructures.h"
 #include "snakePrototypes.h"
-#include "snakeEnums.h"
 #include "snakeMacros.h"
+#include "snakeEnums.h"
+#include "snakeLogger.h"
 
 /* Used to reset terminal from raw mode. */
 struct termios reset_terminal;
 
 int main(void)
 {
+	#ifdef DEBUG
+	#endif
+
 	if (!rawSetup())
 	{
 		return EXIT_FAILURE;
 	}
 
-	char gameBoard[grid_height][grid_width];
+	char gameBoard[GRID_HEIGHT][GRID_WIDTH];
 
 	srand(time(NULL));
 	snake *head = snakeSetup();
@@ -45,8 +49,8 @@ snake *snakeSetup(void)
 		exit(EXIT_FAILURE);
 	}
 
-	head->x = snake_spawn_x;
-	head->y = snake_spawn_y;
+	head->x = SNAKE_SPAWN_X;
+	head->y = SNAKE_SPAWN_Y;
 	head->next = NULL;
 
 	return head;
@@ -56,12 +60,12 @@ food foodSetUp(void)
 {
 	food food_spawn;
 
-	food_spawn.x = rand() % (grid_width - 2) + 1;
-	food_spawn.y = rand() % (grid_height - 2) + 1;
+	food_spawn.x = rand() % (GRID_WIDTH - 2) + 1;
+	food_spawn.y = rand() % (GRID_HEIGHT - 2) + 1;
 	food_spawn.score = 0;
 	food_spawn.spawned = true;
 
-	if (food_spawn.x == snake_spawn_x && food_spawn.y == snake_spawn_y)
+	if (food_spawn.x == SNAKE_SPAWN_X && food_spawn.y == SNAKE_SPAWN_Y)
 	{
 		++food_spawn.x;
 	}
@@ -69,11 +73,11 @@ food foodSetUp(void)
 	return food_spawn;
 }
 
-void boardSetup(snake *head, food food_spawn, char gameBoard[grid_height][grid_width])
+void boardSetup(snake *head, food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDTH])
 {
-	for (int y = 0; y < grid_height; ++y)
+	for (int y = 0; y < GRID_HEIGHT; ++y)
 	{
-		for (int x = 0; x < grid_width; ++x)
+		for (int x = 0; x < GRID_WIDTH; ++x)
 		{
 			if (head->x == x && head->y == y)
 			{
@@ -91,7 +95,7 @@ void boardSetup(snake *head, food food_spawn, char gameBoard[grid_height][grid_w
 	}
 }
 
-void runGame(snake *head, food food_spawn, char gameBoard[grid_height][grid_width])
+void runGame(snake *head, food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDTH])
 {
 	char byte, direction;
 
@@ -213,15 +217,15 @@ void rawDisable()
 	tcsetattr(STDIN_FILENO, TCSANOW, &reset_terminal);
 }
 
-void renderBoard(char gameBoard[grid_height][grid_width], int score)
+void renderBoard(char gameBoard[GRID_HEIGHT][GRID_WIDTH], int score)
 {
 	system("clear");
 	printf("Score: %d\n", score);
-	for (int y = 0; y < grid_height; ++y)
+	for (int y = 0; y < GRID_HEIGHT; ++y)
 	{
-		for (int x = 0; x < grid_width; ++x)
+		for (int x = 0; x < GRID_WIDTH; ++x)
 		{
-			if (y == 0 || y == grid_height - 1 || x == 0 || x == grid_width - 1)
+			if (y == 0 || y == GRID_HEIGHT - 1 || x == 0 || x == GRID_WIDTH - 1)
 			{
 				printf("#");
 			}
@@ -234,7 +238,7 @@ void renderBoard(char gameBoard[grid_height][grid_width], int score)
 	}
 }
 
-void moveSnake(snake *head, char direction, char gameBoard[grid_height][grid_width])
+void moveSnake(snake *head, char direction, char gameBoard[GRID_HEIGHT][GRID_WIDTH])
 {
 	snake *body = head;
 	body = body->next;
@@ -287,12 +291,12 @@ food devourFood(food food_spawn, snake *head)
 	return food_spawn;
 }
 
-food spawnFood(food food_spawn, char gameBoard[grid_height][grid_width], snake *head)
+food spawnFood(food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDTH], snake *head)
 {
 	if (food_spawn.spawned == false)
 	{
-		food_spawn.x = rand() % (grid_width - 2) + 1;
-		food_spawn.y = rand() % (grid_height - 2) + 1;
+		food_spawn.x = rand() % (GRID_WIDTH - 2) + 1;
+		food_spawn.y = rand() % (GRID_HEIGHT - 2) + 1;
 		gameBoard[food_spawn.y][food_spawn.x] = 'X';
 		food_spawn.spawned = true;
 
@@ -315,7 +319,7 @@ void preventOverlapping(int *x, int *y, snake **head)
 			check_head = *head; 
 
 			/* New row */
-			if(n_x == grid_width - 2 && n_y != grid_height - 2)
+			if(n_x == GRID_WIDTH - 2 && n_y != GRID_HEIGHT - 2)
 			{
 				++n_y;
 				n_x = 0;
@@ -323,11 +327,7 @@ void preventOverlapping(int *x, int *y, snake **head)
 
 			*x = n_x++;
 
-			/* DEBUG LOGGING */
-			FILE *f;
-			f = fopen("x.log", "a+");
-			fprintf(f, "Overlapping, so setting new values x/y to, x:%d y:%d\n", *x, *y); 
-			fclose(f);
+			//IF_OVERLAPPING_DEBUGGING
 		} 
 
 		check_head = check_head->next; 
@@ -383,12 +383,12 @@ bool borderCollision(snake *head)
 {
 	bool colliding = false;
 
-	if (head->x <= grid_width - grid_width || head->x >= grid_width - 1)
+	if (head->x <= GRID_WIDTH - GRID_WIDTH || head->x >= GRID_WIDTH - 1)
 	{
 		colliding = true;
 	}
 
-	if (head->y <= grid_height - grid_height || head->y >= grid_height - 1)
+	if (head->y <= GRID_HEIGHT - GRID_HEIGHT || head->y >= GRID_HEIGHT - 1)
 	{
 		colliding = true;
 	}

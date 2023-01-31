@@ -27,12 +27,12 @@ food foodSetUp(void);
 /// @param struct*
 /// @param struct
 /// @param char[][]
-void boardSetup(snake *, food, char[grid_height][grid_width]);
+void boardSetup(snake *, food, char[GRID_HEIGHT][GRID_WIDTH]);
 
 /// @brief Will excute the game loop, this loop will run until the end of the game. This functions controls and calls most of the other logic in this game.
 /// @param struct*
 /// @param struct
-void runGame(snake *, food, char[grid_height][grid_width]);
+void runGame(snake *, food, char[GRID_HEIGHT][GRID_WIDTH]);
 
 /// @brief Determines how fast the game is rendered and the input is read.
 void refreshRate(void);
@@ -50,13 +50,13 @@ int translateByte(char, char);
 /// @brief Render the game board.
 /// @param char[][]
 /// @param int
-void renderBoard(char[grid_height][grid_width], int score);
+void renderBoard(char[GRID_HEIGHT][GRID_WIDTH], int score);
 
 /// @brief Move the snake.
 /// @param struct*
 /// @param char
 /// @param char[][]
-void moveSnake(snake *, char, char[grid_height][grid_width]);
+void moveSnake(snake *, char, char[GRID_HEIGHT][GRID_WIDTH]);
 
 /// @brief Check if the snake has devoured any food.
 /// @param struct
@@ -73,7 +73,7 @@ void addSnakeParts(snake **, bool);
 /// @param struct
 /// @param char[][]
 /// @param struct* 
-food spawnFood(food, char[grid_height][grid_width], snake *);
+food spawnFood(food, char[GRID_HEIGHT][GRID_WIDTH], snake *);
 
 /// @brief If new food is about to spawn atop of the snake, give it a new position.
 /// @param int* 

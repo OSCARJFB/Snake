@@ -6,11 +6,11 @@
 #ifndef SNAKEMACROS_H
 #define SNAKEMACROS_H
 
-/// @brief On Failure.
-#define FAIL -1
+/// @brief Escape key.
+#define ESCAPE_KEY 27
 
-/// @brief On success.
-#define SUCCESS 1
+/// @brief A second in nanoseconds.
+#define SECOND 1000000000
 
 /// @brief A byte.
 #define ONE_BYTE 1
