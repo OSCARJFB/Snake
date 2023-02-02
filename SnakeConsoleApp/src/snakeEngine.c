@@ -21,8 +21,10 @@ struct termios reset_terminal;
 
 int main(void)
 {
-	#ifdef DEBUG
-	#endif
+
+#ifdef DEBUG
+	_LogDebug("main: Start debug, executing from main...");
+#endif
 
 	if (!rawSetup())
 	{
@@ -36,6 +38,10 @@ int main(void)
 	food food_spawn = foodSetUp();
 	boardSetup(head, food_spawn, gameBoard);
 	runGame(head, food_spawn, gameBoard);
+
+#ifdef DEBUG
+	_LogDebug("main: Exit with success.");
+#endif
 
 	return EXIT_SUCCESS;
 }
@@ -52,6 +58,11 @@ snake *snakeSetup(void)
 	head->x = SNAKE_SPAWN_X;
 	head->y = SNAKE_SPAWN_Y;
 	head->next = NULL;
+
+#ifdef DEBUG
+	_LogDebug("snakeSetup: Successfully allocated first node of a linked list.");
+	_LogDebug("snakeSetup: Set snake spawn to x: %d and y: %d.", head->x, head->y);
+#endif
 
 	return head;
 }
@@ -307,19 +318,19 @@ food spawnFood(food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDTH], snake *
 }
 
 void preventOverlapping(int *x, int *y, snake **head)
-{	
-	int n_x = 1, n_y = 1; 
-	bool overlapping = false; 
-	snake *check_head = *head; 
-	while(check_head != NULL)
+{
+	int n_x = 1, n_y = 1;
+	bool overlapping = false;
+	snake *check_head = *head;
+	while (check_head != NULL)
 	{
-		if(check_head->x == *x && check_head->y == *y)
+		if (check_head->x == *x && check_head->y == *y)
 		{
-			*y = n_y; 
-			check_head = *head; 
+			*y = n_y;
+			check_head = *head;
 
 			/* New row */
-			if(n_x == GRID_WIDTH - 2 && n_y != GRID_HEIGHT - 2)
+			if (n_x == GRID_WIDTH - 2 && n_y != GRID_HEIGHT - 2)
 			{
 				++n_y;
 				n_x = 0;
@@ -327,10 +338,10 @@ void preventOverlapping(int *x, int *y, snake **head)
 
 			*x = n_x++;
 
-			//IF_OVERLAPPING_DEBUGGING
-		} 
+			// IF_OVERLAPPING_DEBUGGING
+		}
 
-		check_head = check_head->next; 
+		check_head = check_head->next;
 	}
 }
 
