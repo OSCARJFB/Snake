@@ -7,87 +7,95 @@
 #define SNAKEPROTOTYPES_H
 #include "snakeStructures.h"
 
-/// @brief Initiate the game settings. Create a window, set the size of that window, the target fps and do seed for random value generation.
-/// @param void
+/**
+ * 	Initiate the game settings. Create a window, set the size of that window, 
+ *  the target fps and do seed for random value generation.
+ */
 void gameSetup(void);
 
-/// @brief Initiates the starting location of the snake.
-/// @param void
-/// @return the allocated head of a linked list.
+/**
+ * 	Initiates the starting location of the snake.
+ */
 snake *snakeSetup(void);
 
-/// @brief Initiates the starting location of good food.
-/// @param void
-/// @return A structure.
+/**
+ * 	Initiates the starting location of good food.
+ */
 food foodSetup(void);
 
-/// @brief Will excute the game loop, this loop will run until the end of the game. This functions controls and calls most of the other logic in this game.
-/// @param struct*
-/// @param struct
+/**
+ * 	Will excute the game loop, this loop will run until the end of the game. 
+ *  This functions controls and calls most of the other logic in this game.
+ */
 void runGame(struct snake *, struct food);
 
-/// @brief Get the user input from the keyboard which can used to steer the movement direction of the snake.
-/// @param int
-/// @param bool
-/// @return A integer representing the keystroke in ASCII value.
+/**
+ * 	Gets user input from the keyboard which can used to steer the movement direction of the snake.
+ */
 int snakeDirection(int, bool);
 
-/// @brief Move the snake according to the direction calculated provided by an integer parameter.
-/// @param struct*
-/// @param int
+/**
+ * 	Move the snake according to the direction calculated provided by an integer parameter.
+ */
 void moveSnake(struct snake *, int);
 
-/// @brief Iterates a linked list and draw each node unto the screen, this will write the snake onto the game.
-/// @param struct*
+/**
+ * 	Iterates a linked list and draw each node unto the screen.
+ *  This will write the snake onto the game.
+ */
 void drawSnake(struct snake *);
 
-/// @brief Draw food that may be devoured by the snake.
-/// @param struct
-/// @return A struct of the same type as the parameter either modified or unmodified.
+/**
+ * 	Draw food that may be devoured by the snake.
+ */
 struct food drawFood(struct food);
 
-/// @brief Check if the snake has devoured the food.
-/// @param struct*
-/// @param struct
-/// @return A struct used for food logic.
+/**
+ * 	Check if the snake has devoured the current food.
+ */
 struct food devourFood(struct snake *, struct food);
 
-/// @brief Add a new node to the linked list, this is done in order to grow the snake.
-/// @param struct**
-/// @param struct
-/// @return A struct used by the food logic.
+/**
+ *	Add a new node to a linked list, this is done in order to grow the snake.
+ *  This is what actually make the snake grow in size.
+ */
 struct food addSnakeParts(struct snake **, struct food);
 
-/// @brief Draw a grid that covers the background of the screen.
-/// @param void
+/**
+ * 	Draw a grid that covers the background of the screen.
+ */
 void drawGrid(void);
 
-/// @brief Draw a border that covers the edges of the screen view.
-/// @param void
+/**
+ * 	Draw a border that covers the edges of the screen view.
+ */
 void drawBorders(void);
 
-/// @brief Draw current score to the screen.
-/// @param int
+/**
+ *	Draws the current score to the screen.
+ */
 void drawScore(int);
 
-/// @brief Controls if the snake has colided with the wall at the edges of the screen.
-/// @param struct*
-/// @return A bool depending on if collision was detected(true) or not(false).
+/**
+ * 	Controls if the snake has colided with the wall at the edges of the screen.
+ * 	Prevents the player from traversing out of bounds.
+ */
 bool borderCollision(snake *);
 
-/// @brief Controls if the snake has colided with itself.
-/// @param struct*
-/// @return A bool depending on if collision was detected(true) or not(false).
+/**
+ * 	Controls if the snake has colided with itself.
+ * 	Use to make sure player does not cross the snake body.
+ */
 bool bodyCollision(snake *);
 
-/// @brief Run if game over is triggered.
-/// @param void
-/// @return A bool set to true.
+/**
+ *	Run if game over is triggered.
+ */
 bool gameOver(void);
 
-/// @brief Look for a keystroke which equals p (for pause).
-/// @param bool
-/// @return A bool set to true or false depending on status of the bool parameter.
+/**
+ *	Looks for a keystroke which equals p (for pause).
+ */
 bool pauseGame(bool pause);
 
 #endif // SNAKEPROTOTYPES_H

@@ -14,18 +14,12 @@
 #include "snakePrototypes.h"
 #include "snakeMacros.h"
 #include "snakeEnums.h"
-#include "snakeLogger.h"
 
-/* Used to reset terminal from raw mode. */
+// Used to reset terminal from raw mode. 
 struct termios reset_terminal;
 
 int main(void)
 {
-
-#ifdef DEBUG
-	_LogDebug("main: Start debug, executing from main...");
-#endif
-
 	if (!rawSetup())
 	{
 		return EXIT_FAILURE;
@@ -39,10 +33,6 @@ int main(void)
 	boardSetup(head, food_spawn, gameBoard);
 	runGame(head, food_spawn, gameBoard);
 
-#ifdef DEBUG
-	_LogDebug("main: Exit with success.");
-#endif
-
 	return EXIT_SUCCESS;
 }
 
@@ -51,18 +41,13 @@ snake *snakeSetup(void)
 	snake *head = malloc(sizeof(snake));
 	if (head == NULL)
 	{
-		printf("snakeSetup: invalid nullptr error.");
+		puts("snakeSetup: invalid nullptr error.");
 		exit(EXIT_FAILURE);
 	}
 
 	head->x = SNAKE_SPAWN_X;
 	head->y = SNAKE_SPAWN_Y;
 	head->next = NULL;
-
-#ifdef DEBUG
-	_LogDebug("snakeSetup: Successfully allocated first node of a linked list.");
-	_LogDebug("snakeSetup: Set snake spawn to x: %d and y: %d.", head->x, head->y);
-#endif
 
 	return head;
 }
@@ -118,7 +103,6 @@ void runGame(snake *head, food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDT
 		renderBoard(gameBoard, food_spawn.score);
 		moveSnake(head, direction, gameBoard);
 		food_spawn = devourFood(food_spawn, head);
-		printf("y: %d x: %d\n", food_spawn.y, food_spawn.x);
 		addSnakeParts(&head, food_spawn.spawned);
 		food_spawn = spawnFood(food_spawn, gameBoard, head);
 		if (borderCollision(head) || snakecollision(head))
@@ -143,7 +127,7 @@ void refreshRate(void)
 	result = nanosleep(&timer, NULL);
 	if (result == FAIL)
 	{
-		printf("refreshRate: error.");
+		puts("refreshRate: error.");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -192,7 +176,7 @@ int translateByte(char byte, char direction)
 	return direction;
 }
 
-int rawSetup()
+int rawSetup(void)
 {
 	int result = 0;
 
@@ -223,7 +207,7 @@ int rawSetup()
 	return SUCCESS;
 }
 
-void rawDisable()
+void rawDisable(void)
 {
 	tcsetattr(STDIN_FILENO, TCSANOW, &reset_terminal);
 }
@@ -310,39 +294,9 @@ food spawnFood(food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDTH], snake *
 		food_spawn.y = rand() % (GRID_HEIGHT - 2) + 1;
 		gameBoard[food_spawn.y][food_spawn.x] = 'X';
 		food_spawn.spawned = true;
-
-		preventOverlapping(&food_spawn.x, &food_spawn.y, &head);
 	}
 
 	return food_spawn;
-}
-
-void preventOverlapping(int *x, int *y, snake **head)
-{
-	int n_x = 1, n_y = 1;
-	bool overlapping = false;
-	snake *check_head = *head;
-	while (check_head != NULL)
-	{
-		if (check_head->x == *x && check_head->y == *y)
-		{
-			*y = n_y;
-			check_head = *head;
-
-			/* New row */
-			if (n_x == GRID_WIDTH - 2 && n_y != GRID_HEIGHT - 2)
-			{
-				++n_y;
-				n_x = 0;
-			}
-
-			*x = n_x++;
-
-			// IF_OVERLAPPING_DEBUGGING
-		}
-
-		check_head = check_head->next;
-	}
 }
 
 void addSnakeParts(snake **head, bool food_is_spawned)
@@ -355,7 +309,7 @@ void addSnakeParts(snake **head, bool food_is_spawned)
 	snake *new_node = malloc(sizeof(snake));
 	if (new_node == NULL)
 	{
-		printf("addSnakeParts: invalid nullptr error.");
+		puts("addSnakeParts: invalid nullptr error.");
 		exit(EXIT_FAILURE);
 	}
 

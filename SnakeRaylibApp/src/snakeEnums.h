@@ -8,50 +8,50 @@
 
 enum gridSize
 {
-    /// @brief Grid height.
+    // Grid height.
     HEIGHT = 20,
-    /// @brief Grid width.
+    // Grid width.
     WIDTH = 20,
 };
 
 enum screenSize
 {
-    /// @brief The actual width of the screen.
+    // The actual width of the screen.
     SCREEN_WIDTH = 400,
-    /// @brief The actual height of the screen.
+    // The actual height of the screen.
     SCREEN_HEIGHT = 400,
 };
 
 enum borderLocation
 {
-    /// @brief Border collision
+    // Border collision
     LEFT_BORDER = 20,
-    /// @brief Border collision
+    // Border collision
     RIGHT_BORDER = 360,
-    /// @brief Border collision
+    // Border collision
     TOP_BORDER = 20,
-    /// @brief Border collision
+    // Border collision
     BOTTOM_BORDER = 360,
 };
 
 enum textProperties
 {
-    /// @brief The size of all text in this game.
+    // The size of all text in this game.
     FONT_SIZE = 20,
 
-    /// @brief Pause message x position.
+    // Pause message x position.
     PAUSE_X = 130,
-    /// @brief Pause message y position.
+    // Pause message y position.
     PAUSE_Y = 150,
 
-    /// @brief Pause message x position.
+    // Pause message x position.
     GAME_OVER_X = 155,
-    /// @brief Pause message y position.
+    // Pause message y position.
     GAME_OVER_Y = 150,
 
-    /// @brief Pause message x position.
+    // Pause message x position.
     SCORE_X = 1,
-    /// @brief Pause message y position.
+    // Pause message y position.
     SCORE_Y = 1,
 };
 

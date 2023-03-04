@@ -4,7 +4,7 @@
 all: release debug 
 
 # Compiles the graphical version.
-release: snakeEngine.c 
+release: snakeEngine.c
 	gcc snakeEngine.c -o snake
 
 # Compiles with debug flag.

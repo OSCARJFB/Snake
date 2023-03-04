@@ -84,12 +84,12 @@ void runGame(snake *head, food food_spawn)
 		drawSnake(head);
 		food_spawn = drawFood(food_spawn);
 		food_spawn = devourFood(head, food_spawn);
-		
-		if(!game_over)
+
+		if (!game_over)
 		{
 			pause = pauseGame(pause);
 		}
-		
+
 		if (borderCollision(head) || bodyCollision(head))
 		{
 			game_over = gameOver();

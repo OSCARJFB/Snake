@@ -6,13 +6,13 @@
 #ifndef SNAKEMACROS_H
 #define SNAKEMACROS_H
 
-/// @brief Escape key.
+// Escape key.
 #define ESCAPE_KEY 27
 
-/// @brief A second in nanoseconds.
+// A second in nanoseconds.
 #define SECOND 1000000000
 
-/// @brief A byte.
+// A byte.
 #define ONE_BYTE 1
 
 #endif // SNAKEMACROS_H
