@@ -109,7 +109,21 @@ void runGame(snake *head, food food_spawn)
 		EndDrawing();
 	}
 
-	free(head);
+	deleteSnake(head);
+}
+
+void deleteSnake(snake *head)
+{
+	snake *temp = NULL;
+	
+	while(head != NULL)
+	{
+		temp = head; 
+		head = head -> next; 
+		free(temp); 
+	}
+
+	temp = NULL; 
 	head = NULL;
 }
 

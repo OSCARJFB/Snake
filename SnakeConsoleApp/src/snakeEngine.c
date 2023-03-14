@@ -93,7 +93,7 @@ void boardSetup(snake *head, food food_spawn, char gameBoard[GRID_HEIGHT][GRID_W
 
 void runGame(snake *head, food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDTH])
 {
-	char byte, direction;
+	char byte = ' ', direction = ' ';
 
 	while (byte != ESCAPE_KEY)
 	{
@@ -113,9 +113,25 @@ void runGame(snake *head, food food_spawn, char gameBoard[GRID_HEIGHT][GRID_WIDT
 		}
 	}
 
-	free(head);
+	deleteSnake(head);
 	head = NULL;
 }
+
+void deleteSnake(snake *head)
+{
+	snake *temp = NULL;
+	
+	while(head != NULL)
+	{
+		temp = head; 
+		head = head -> next; 
+		free(temp); 
+	}
+
+	temp = NULL; 
+	head = NULL;
+}
+
 
 void refreshRate(void)
 {
